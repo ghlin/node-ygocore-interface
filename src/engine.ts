@@ -102,11 +102,11 @@ export interface QueryFieldCardOptions {
   /**
    * incremental?
    *
-   * useCache = 1:
+   * useCache = true:
    * 如果上次query时某一项（QUERY_XX)的值未发生改变，这一项
    * 将不会写到返回的buffer中
    */
-  useCache: number;
+  useCache: boolean;
 }
 
 export interface QueryCardOptions extends QueryFieldCardOptions {
@@ -196,13 +196,8 @@ export interface OCGEngine<D> {
 
   /**
    * query cards specified by {@param qo}
-   * @returns length: card count
-   *          buffer: card information
    */
-  queryFieldCard(duel: D, qo: QueryFieldCardOptions): {
-    length: number;
-    buffer: Buffer
-  };
+  queryFieldCard(duel: D, qo: QueryFieldCardOptions): Buffer;
 
   /**
    * quer field count
