@@ -75,7 +75,7 @@ export interface ProcessResult {
   /**
    * from `get_message()`
    */
-  messages: Buffer;
+  data: Buffer;
 
   /**
    *  high 16 bits of the return value from `process()`
@@ -142,14 +142,6 @@ export interface OCGEngine<D> {
   createDuel(seed: number): number;
 
   /**
-   * create a duel with seed from ygopro's replay
-   *
-   * returns the duel id, pass it to below functions.
-   * @param seed random seed
-   */
-  createYgoproReplayDuel(seed: number): number;
-
-  /**
    * start a duel
    * @param duel duel id
    * @param options duel options
@@ -181,7 +173,7 @@ export interface OCGEngine<D> {
    * @param duel duel id
    * @param response response
    */
-  setResponse(duel: D, response: ArrayBuffer): void;
+  setResponse(duel: D, response: Buffer): void;
 
   /**
    * tick
@@ -203,9 +195,4 @@ export interface OCGEngine<D> {
    * quer field count
    */
   queryFieldCount(duel: D, player: number, location: number): number;
-
-  /**
-   * query field info (MSG_RELOAD_FIELD)
-   */
-  queryFieldInfo(duel: D): Buffer;
 }
