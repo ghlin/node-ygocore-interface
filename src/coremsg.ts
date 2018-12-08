@@ -69,10 +69,115 @@ export interface MsgStart {
 
 export interface MsgUpdateData {
   msgtype: 'MSG_UPDATE_DATA';
+  player: number;
+  location: number;
+  cards: Array<{
+    query_flag: number;
+    code: Optional<number>;
+    alias: Optional<number>;
+    info: Optional<{
+      controller: number;
+      location: number;
+      position: number;
+      sequence: number;
+    }>;
+    type: Optional<number>;
+    level: Optional<number>;
+    rank: Optional<number>;
+    attribute: Optional<number>;
+    race: Optional<number>;
+    attack: Optional<number>;
+    defense: Optional<number>;
+    base_attack: Optional<number>;
+    base_defense: Optional<number>;
+    reason: Optional<number>;
+    reason_card: Optional<{
+      controller: number;
+      location: number;
+      position: number;
+      sequence: number;
+    }>;
+    equip_cards: Array<{
+      controller: number;
+      location: number;
+      position: number;
+      sequence: number;
+    }>;
+    target_cards: Array<{
+      controller: number;
+      location: number;
+      position: number;
+      sequence: number;
+    }>;
+    overlay_cards: Array<number>;
+    counters: Array<{
+      type: number;
+      count: number;
+    }>;
+    owner: Optional<number>;
+    is_disabled: Optional<number>;
+    is_public: Optional<number>;
+    lscale: Optional<number>;
+    rscale: Optional<number>;
+    link: Optional<number>;
+    link_marker: Optional<number>;
+  }>;
 }
 
 export interface MsgUpdateCard {
   msgtype: 'MSG_UPDATE_CARD';
+  player: number;
+  location: number;
+  sequence: number;
+  query_flag: number;
+  code: Optional<number>;
+  alias: Optional<number>;
+  info: Optional<{
+    controller: number;
+    location: number;
+    position: number;
+    sequence: number;
+  }>;
+  type: Optional<number>;
+  level: Optional<number>;
+  rank: Optional<number>;
+  attribute: Optional<number>;
+  race: Optional<number>;
+  attack: Optional<number>;
+  defense: Optional<number>;
+  base_attack: Optional<number>;
+  base_defense: Optional<number>;
+  reason: Optional<number>;
+  reason_card: Optional<{
+    controller: number;
+    location: number;
+    position: number;
+    sequence: number;
+  }>;
+  equip_cards: Array<{
+    controller: number;
+    location: number;
+    position: number;
+    sequence: number;
+  }>;
+  target_cards: Array<{
+    controller: number;
+    location: number;
+    position: number;
+    sequence: number;
+  }>;
+  overlay_cards: Array<number>;
+  counters: Array<{
+    type: number;
+    count: number;
+  }>;
+  owner: Optional<number>;
+  is_disabled: Optional<number>;
+  is_public: Optional<number>;
+  lscale: Optional<number>;
+  rscale: Optional<number>;
+  link: Optional<number>;
+  link_marker: Optional<number>;
 }
 
 export interface MsgSelectBattleCmd {
@@ -953,25 +1058,166 @@ function parseMsgStart(buffer: BufferReader): MsgStart {
 }
 
 /**
- * parse bytes as MsgUpdateData (MSG_UPDATE_DATA)
+ * returned from `query_card()`
  */
-function parseMsgUpdateData(_buffer: BufferReader): MsgUpdateData {
-  const result: any = { };
-  { /* reading result (MsgUpdateData) */
+export interface QueryCardChunk {
+  query_flag: number;
+  code: Optional<number>;
+  alias: Optional<number>;
+  info: Optional<{
+    controller: number;
+    location: number;
+    position: number;
+    sequence: number;
+  }>;
+  type: Optional<number>;
+  level: Optional<number>;
+  rank: Optional<number>;
+  attribute: Optional<number>;
+  race: Optional<number>;
+  attack: Optional<number>;
+  defense: Optional<number>;
+  base_attack: Optional<number>;
+  base_defense: Optional<number>;
+  reason: Optional<number>;
+  reason_card: Optional<{
+    controller: number;
+    location: number;
+    position: number;
+    sequence: number;
+  }>;
+  equip_cards: Array<{
+    controller: number;
+    location: number;
+    position: number;
+    sequence: number;
+  }>;
+  target_cards: Array<{
+    controller: number;
+    location: number;
+    position: number;
+    sequence: number;
+  }>;
+  overlay_cards: Array<number>;
+  counters: Array<{
+    type: number;
+    count: number;
+  }>;
+  owner: Optional<number>;
+  is_disabled: Optional<number>;
+  is_public: Optional<number>;
+  lscale: Optional<number>;
+  rscale: Optional<number>;
+  link: Optional<number>;
+  link_marker: Optional<number>;
+}
+
+/* */
+function parseInfoLocation(buffer: BufferReader): any {
+  const info: any = { };
+  info.controller = buffer.nextU8();
+  info.location = buffer.nextU8();
+  info.sequence = buffer.nextU8();
+  info.position = buffer.nextU8();
+  return info;
+}
+
+function parseInfoLocations(buffer: BufferReader): any {
+  const many: any[] = [];
+  const count = buffer.nextU32();
+  for (let i = 0; i !== count; ++i) {
+    many.push(parseInfoLocation(buffer));
   }
-  result.msgtype = 'MSG_UPDATE_DATA';
-  return result as MsgUpdateData;
+  return many;
+}
+
+function parseChunks(buffer: BufferReader): any[] {
+  const chunks: any[] = [];
+  while (!buffer.finished()) {
+    const bytes = buffer.nextU32();
+    if (bytes === 4) continue;
+
+    const chunk: any = { };
+    const flags = buffer.nextU32();
+
+    chunk.query_flag = flags;
+    if (flags & QUERY.CODE) chunk.code = buffer.nextU32();
+    if (flags & QUERY.ALIAS) chunk.alias = buffer.nextU32();
+    if (flags & QUERY.POSITION) chunk.info = parseInfoLocation(buffer);
+    if (flags & QUERY.TYPE) chunk.type = buffer.nextU32();
+    if (flags & QUERY.LEVEL) chunk.level = buffer.nextU32();
+    if (flags & QUERY.RANK) chunk.rank = buffer.nextU32();
+    if (flags & QUERY.ATTRIBUTE) chunk.attribute = buffer.nextU32();
+    if (flags & QUERY.RACE) chunk.race = buffer.nextU32();
+    if (flags & QUERY.ATTACK) chunk.attack = buffer.nextI32();
+    if (flags & QUERY.DEFENSE) chunk.defense = buffer.nextI32();
+    if (flags & QUERY.BASE_ATTACK) chunk.base_attack = buffer.nextI32();
+    if (flags & QUERY.BASE_DEFENSE) chunk.base_defense = buffer.nextI32();
+    if (flags & QUERY.REASON) chunk.reason = buffer.nextI32();
+
+    if (flags & QUERY.REASON_CARD) chunk.reason_card = parseInfoLocation(buffer);
+    if (flags & QUERY.EQUIP_CARD) chunk.equip_cards = parseInfoLocations(buffer);
+    if (flags & QUERY.TARGET_CARD) chunk.target_cards = parseInfoLocations(buffer);
+    if (flags & QUERY.OVERLAY_CARD) {
+      const count = buffer.nextU32();
+      for (let i = 0; i !== count; ++i) chunk.overlay_cards.push(buffer.nextU32());
+    }
+    if (flags & QUERY.COUNTERS) {
+      const count = buffer.nextU32();
+      for (let i = 0; i !== count; ++i) {
+        const type = buffer.nextU16();
+        const count = buffer.nextU16();
+        chunk.counters.push({ type, count });
+      }
+    }
+    if (flags & QUERY.OWNER) chunk.owner = buffer.nextU32();
+    if (flags & QUERY.IS_DISABLED) chunk.is_disabled = buffer.nextU32();
+    if (flags & QUERY.IS_PUBLIC) chunk.is_public = buffer.nextU32();
+    if (flags & QUERY.LSCALE) chunk.lscale = buffer.nextU32();
+    if (flags & QUERY.RSCALE) chunk.rscale = buffer.nextU32();
+
+    if (flags & QUERY.LINK) chunk.link = buffer.nextU32();
+    if (flags & QUERY.LINK) chunk.link_marker = buffer.nextU32();
+
+    chunks.push(chunk);
+  }
+
+  return chunks;
 }
 
 /**
- * parse bytes as MsgUpdateCard (MSG_UPDATE_CARD)
+ * MSG_UPDATE_DATA
  */
-function parseMsgUpdateCard(_buffer: BufferReader): MsgUpdateCard {
+function parseMsgUpdateData(buffer: BufferReader): MsgUpdateData {
   const result: any = { };
-  { /* reading result (MsgUpdateCard) */
-  }
+  result.msgtype = 'MSG_UPDATE_DATA';
+  result.player = buffer.nextU8();
+  result.location = buffer.nextU8();
+  result.cards = parseChunks(buffer);
+
+  return result as MsgUpdateData;
+}
+
+export function parseFieldCardQueryResult(buffer: Buffer): QueryCardChunk[] {
+  return parseChunks(new BufferReader(buffer)) as QueryCardChunk[];
+}
+
+/**
+ * MSG_UPDATE_CARD
+ */
+function parseMsgUpdateCard(buffer: BufferReader): MsgUpdateCard {
+  const result: any = { };
   result.msgtype = 'MSG_UPDATE_CARD';
-  return result as MsgUpdateCard;
+
+  result.player = buffer.nextU8();
+  result.location = buffer.nextU8();
+  result.sequence = buffer.nextU8();
+  const chunk = parseChunks(buffer);
+  return { ...result, ...chunk[0] } as MsgUpdateCard;
+}
+
+export function parseCardQueryResult(buffer: Buffer): QueryCardChunk {
+  return parseChunks(new BufferReader(buffer))[0] as QueryCardChunk;
 }
 
 /**
