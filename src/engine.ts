@@ -97,7 +97,7 @@ export interface QueryFieldCardOptions {
   /**
    * QUERY_* flags
    */
-  queryFlag: number;
+  queryFlags: number;
 
   /**
    * incremental?
