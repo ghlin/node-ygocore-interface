@@ -998,7 +998,7 @@ function parseMsgHint(buffer: BufferReader): MsgHint {
   const result: any = { };
   { /* reading result (MsgHint) */
     result.type = buffer.nextI8();
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.data = buffer.nextI32();
   }
   result.msgtype = 'MSG_HINT';
@@ -1011,7 +1011,7 @@ function parseMsgHint(buffer: BufferReader): MsgHint {
 function parseMsgWin(buffer: BufferReader): MsgWin {
   const result: any = { };
   { /* reading result (MsgWin) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.type = buffer.nextI8();
   }
   result.msgtype = 'MSG_WIN';
@@ -1035,7 +1035,7 @@ function parseMsgWaiting(_buffer: BufferReader): MsgWaiting {
 function parseMsgStart(buffer: BufferReader): MsgStart {
   const result: any = { };
   { /* reading result (MsgStart) */
-    result.player_type = buffer.nextI8();
+    result.player_type = buffer.nextU8();
     const start_lp: any[] = [];
     for (let i = 0; i !== 2; ++i) {
       const start_lp1 = buffer.nextI32();
@@ -1226,16 +1226,16 @@ export function parseCardQueryResult(buffer: Buffer): QueryCardChunk {
 function parseMsgSelectBattleCmd(buffer: BufferReader): MsgSelectBattleCmd {
   const result: any = { };
   { /* reading result (MsgSelectBattleCmd) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const activatable: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
       const activatable1: any = { };
       { /* reading activatable1 (Activatable) */
         activatable1.code_and_flags = buffer.nextU32();
-        activatable1.controller = buffer.nextI8();
-        activatable1.location = buffer.nextI8();
-        activatable1.sequence = buffer.nextI8();
+        activatable1.controller = buffer.nextU8();
+        activatable1.location = buffer.nextU8();
+        activatable1.sequence = buffer.nextU8();
         activatable1.description = buffer.nextI32();
       }
       activatable.push(activatable1)
@@ -1247,9 +1247,9 @@ function parseMsgSelectBattleCmd(buffer: BufferReader): MsgSelectBattleCmd {
       const attackable1: any = { };
       { /* reading attackable1 (Attackable) */
         attackable1.code = buffer.nextU32();
-        attackable1.controller = buffer.nextI8();
-        attackable1.location = buffer.nextI8();
-        attackable1.sequence = buffer.nextI8();
+        attackable1.controller = buffer.nextU8();
+        attackable1.location = buffer.nextU8();
+        attackable1.sequence = buffer.nextU8();
         attackable1.directly = buffer.nextI8();
       }
       attackable.push(attackable1)
@@ -1268,16 +1268,16 @@ function parseMsgSelectBattleCmd(buffer: BufferReader): MsgSelectBattleCmd {
 function parseMsgSelectIdleCmd(buffer: BufferReader): MsgSelectIdleCmd {
   const result: any = { };
   { /* reading result (MsgSelectIdleCmd) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const summonables: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
       const summonables1: any = { };
       { /* reading summonables1 (IdleCommandSelection) */
         summonables1.code = buffer.nextU32();
-        summonables1.controller = buffer.nextI8();
-        summonables1.location = buffer.nextI8();
-        summonables1.sequence = buffer.nextI8();
+        summonables1.controller = buffer.nextU8();
+        summonables1.location = buffer.nextU8();
+        summonables1.sequence = buffer.nextU8();
       }
       summonables.push(summonables1)
     }
@@ -1288,9 +1288,9 @@ function parseMsgSelectIdleCmd(buffer: BufferReader): MsgSelectIdleCmd {
       const special_summonables1: any = { };
       { /* reading special_summonables1 (IdleCommandSelection) */
         special_summonables1.code = buffer.nextU32();
-        special_summonables1.controller = buffer.nextI8();
-        special_summonables1.location = buffer.nextI8();
-        special_summonables1.sequence = buffer.nextI8();
+        special_summonables1.controller = buffer.nextU8();
+        special_summonables1.location = buffer.nextU8();
+        special_summonables1.sequence = buffer.nextU8();
       }
       special_summonables.push(special_summonables1)
     }
@@ -1301,9 +1301,9 @@ function parseMsgSelectIdleCmd(buffer: BufferReader): MsgSelectIdleCmd {
       const reposables1: any = { };
       { /* reading reposables1 (IdleCommandSelection) */
         reposables1.code = buffer.nextU32();
-        reposables1.controller = buffer.nextI8();
-        reposables1.location = buffer.nextI8();
-        reposables1.sequence = buffer.nextI8();
+        reposables1.controller = buffer.nextU8();
+        reposables1.location = buffer.nextU8();
+        reposables1.sequence = buffer.nextU8();
       }
       reposables.push(reposables1)
     }
@@ -1314,9 +1314,9 @@ function parseMsgSelectIdleCmd(buffer: BufferReader): MsgSelectIdleCmd {
       const setable_monsters1: any = { };
       { /* reading setable_monsters1 (IdleCommandSelection) */
         setable_monsters1.code = buffer.nextU32();
-        setable_monsters1.controller = buffer.nextI8();
-        setable_monsters1.location = buffer.nextI8();
-        setable_monsters1.sequence = buffer.nextI8();
+        setable_monsters1.controller = buffer.nextU8();
+        setable_monsters1.location = buffer.nextU8();
+        setable_monsters1.sequence = buffer.nextU8();
       }
       setable_monsters.push(setable_monsters1)
     }
@@ -1327,9 +1327,9 @@ function parseMsgSelectIdleCmd(buffer: BufferReader): MsgSelectIdleCmd {
       const setable_spells1: any = { };
       { /* reading setable_spells1 (IdleCommandSelection) */
         setable_spells1.code = buffer.nextU32();
-        setable_spells1.controller = buffer.nextI8();
-        setable_spells1.location = buffer.nextI8();
-        setable_spells1.sequence = buffer.nextI8();
+        setable_spells1.controller = buffer.nextU8();
+        setable_spells1.location = buffer.nextU8();
+        setable_spells1.sequence = buffer.nextU8();
       }
       setable_spells.push(setable_spells1)
     }
@@ -1340,9 +1340,9 @@ function parseMsgSelectIdleCmd(buffer: BufferReader): MsgSelectIdleCmd {
       const activatables1: any = { };
       { /* reading activatables1 (Activatable) */
         activatables1.code = buffer.nextU32();
-        activatables1.controller = buffer.nextI8();
-        activatables1.location = buffer.nextI8();
-        activatables1.sequence = buffer.nextI8();
+        activatables1.controller = buffer.nextU8();
+        activatables1.location = buffer.nextU8();
+        activatables1.sequence = buffer.nextU8();
         activatables1.description = buffer.nextI32();
       }
       activatables.push(activatables1)
@@ -1362,11 +1362,11 @@ function parseMsgSelectIdleCmd(buffer: BufferReader): MsgSelectIdleCmd {
 function parseMsgSelectEffectyn(buffer: BufferReader): MsgSelectEffectyn {
   const result: any = { };
   { /* reading result (MsgSelectEffectyn) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.code = buffer.nextU32();
-    result.controller = buffer.nextI8();
-    result.location = buffer.nextI8();
-    result.sequence = buffer.nextI8();
+    result.controller = buffer.nextU8();
+    result.location = buffer.nextU8();
+    result.sequence = buffer.nextU8();
     result.ignore = buffer.nextI8();
     result.desc = buffer.nextI32();
   }
@@ -1380,7 +1380,7 @@ function parseMsgSelectEffectyn(buffer: BufferReader): MsgSelectEffectyn {
 function parseMsgSelectYesno(buffer: BufferReader): MsgSelectYesno {
   const result: any = { };
   { /* reading result (MsgSelectYesno) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.desc = buffer.nextI32();
   }
   result.msgtype = 'MSG_SELECT_YESNO';
@@ -1393,7 +1393,7 @@ function parseMsgSelectYesno(buffer: BufferReader): MsgSelectYesno {
 function parseMsgSelectOption(buffer: BufferReader): MsgSelectOption {
   const result: any = { };
   { /* reading result (MsgSelectOption) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const options: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
@@ -1412,7 +1412,7 @@ function parseMsgSelectOption(buffer: BufferReader): MsgSelectOption {
 function parseMsgSelectCard(buffer: BufferReader): MsgSelectCard {
   const result: any = { };
   { /* reading result (MsgSelectCard) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.non_cancelable = buffer.nextI8();
     const range: any = { };
     { /* reading range (Range) */
@@ -1426,10 +1426,10 @@ function parseMsgSelectCard(buffer: BufferReader): MsgSelectCard {
       const selections1: any = { };
       { /* reading selections1 (Selection) */
         selections1.code = buffer.nextU32();
-        selections1.controller = buffer.nextI8();
-        selections1.location = buffer.nextI8();
-        selections1.sequence = buffer.nextI8();
-        selections1.subsequence = buffer.nextI8();
+        selections1.controller = buffer.nextU8();
+        selections1.location = buffer.nextU8();
+        selections1.sequence = buffer.nextU8();
+        selections1.subsequence = buffer.nextU8();
       }
       selections.push(selections1)
     }
@@ -1445,7 +1445,7 @@ function parseMsgSelectCard(buffer: BufferReader): MsgSelectCard {
 function parseMsgSelectUnselectCard(buffer: BufferReader): MsgSelectUnselectCard {
   const result: any = { };
   { /* reading result (MsgSelectUnselectCard) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.should_continue = buffer.nextI8();
     result.non_cancelable = buffer.nextI8();
     const range: any = { };
@@ -1460,10 +1460,10 @@ function parseMsgSelectUnselectCard(buffer: BufferReader): MsgSelectUnselectCard
       const not_selected1: any = { };
       { /* reading not_selected1 (Selection) */
         not_selected1.code = buffer.nextU32();
-        not_selected1.controller = buffer.nextI8();
-        not_selected1.location = buffer.nextI8();
-        not_selected1.sequence = buffer.nextI8();
-        not_selected1.subsequence = buffer.nextI8();
+        not_selected1.controller = buffer.nextU8();
+        not_selected1.location = buffer.nextU8();
+        not_selected1.sequence = buffer.nextU8();
+        not_selected1.subsequence = buffer.nextU8();
       }
       not_selected.push(not_selected1)
     }
@@ -1474,10 +1474,10 @@ function parseMsgSelectUnselectCard(buffer: BufferReader): MsgSelectUnselectCard
       const selected1: any = { };
       { /* reading selected1 (Selection) */
         selected1.code = buffer.nextU32();
-        selected1.controller = buffer.nextI8();
-        selected1.location = buffer.nextI8();
-        selected1.sequence = buffer.nextI8();
-        selected1.subsequence = buffer.nextI8();
+        selected1.controller = buffer.nextU8();
+        selected1.location = buffer.nextU8();
+        selected1.sequence = buffer.nextU8();
+        selected1.subsequence = buffer.nextU8();
       }
       selected.push(selected1)
     }
@@ -1493,7 +1493,7 @@ function parseMsgSelectUnselectCard(buffer: BufferReader): MsgSelectUnselectCard
 function parseMsgSelectChain(buffer: BufferReader): MsgSelectChain {
   const result: any = { };
   { /* reading result (MsgSelectChain) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const c1 = buffer.nextI8();
     /* c1: hidden */
     result.spe_count = buffer.nextI8();
@@ -1507,10 +1507,10 @@ function parseMsgSelectChain(buffer: BufferReader): MsgSelectChain {
       { /* reading activatables1 (Activatable) */
         activatables1.flag = buffer.nextI8();
         activatables1.code = buffer.nextU32();
-        activatables1.controller = buffer.nextI8();
-        activatables1.location = buffer.nextI8();
-        activatables1.sequence = buffer.nextI8();
-        activatables1.subsequence = buffer.nextI8();
+        activatables1.controller = buffer.nextU8();
+        activatables1.location = buffer.nextU8();
+        activatables1.sequence = buffer.nextU8();
+        activatables1.subsequence = buffer.nextU8();
         activatables1.desc = buffer.nextI32();
       }
       activatables.push(activatables1)
@@ -1527,7 +1527,7 @@ function parseMsgSelectChain(buffer: BufferReader): MsgSelectChain {
 function parseMsgSelectPlace(buffer: BufferReader): MsgSelectPlace {
   const result: any = { };
   { /* reading result (MsgSelectPlace) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.minimal_selection = buffer.nextI8();
     result.pattern = buffer.nextU32();
   }
@@ -1541,7 +1541,7 @@ function parseMsgSelectPlace(buffer: BufferReader): MsgSelectPlace {
 function parseMsgSelectDisfield(buffer: BufferReader): MsgSelectDisfield {
   const result: any = { };
   { /* reading result (MsgSelectDisfield) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.minimal_selection = buffer.nextI8();
     result.pattern = buffer.nextU32();
   }
@@ -1555,9 +1555,9 @@ function parseMsgSelectDisfield(buffer: BufferReader): MsgSelectDisfield {
 function parseMsgSelectPosition(buffer: BufferReader): MsgSelectPosition {
   const result: any = { };
   { /* reading result (MsgSelectPosition) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.code = buffer.nextU32();
-    result.positions = buffer.nextI8();
+    result.positions = buffer.nextU8();
   }
   result.msgtype = 'MSG_SELECT_POSITION';
   return result as MsgSelectPosition;
@@ -1569,7 +1569,7 @@ function parseMsgSelectPosition(buffer: BufferReader): MsgSelectPosition {
 function parseMsgSelectTribute(buffer: BufferReader): MsgSelectTribute {
   const result: any = { };
   { /* reading result (MsgSelectTribute) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.non_cancelable = buffer.nextI8();
     const range: any = { };
     { /* reading range (Range) */
@@ -1583,9 +1583,9 @@ function parseMsgSelectTribute(buffer: BufferReader): MsgSelectTribute {
       const selection1: any = { };
       { /* reading selection1 (Selection) */
         selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextI8();
-        selection1.location = buffer.nextI8();
-        selection1.sequence = buffer.nextI8();
+        selection1.controller = buffer.nextU8();
+        selection1.location = buffer.nextU8();
+        selection1.sequence = buffer.nextU8();
         selection1.operation_param = buffer.nextI8();
       }
       selection.push(selection1)
@@ -1602,7 +1602,7 @@ function parseMsgSelectTribute(buffer: BufferReader): MsgSelectTribute {
 function parseMsgSelectCounter(buffer: BufferReader): MsgSelectCounter {
   const result: any = { };
   { /* reading result (MsgSelectCounter) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.type = buffer.nextI16();
     result.count = buffer.nextI16();
     const selection: any[] = [];
@@ -1611,9 +1611,9 @@ function parseMsgSelectCounter(buffer: BufferReader): MsgSelectCounter {
       const selection1: any = { };
       { /* reading selection1 (Selection) */
         selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextI8();
-        selection1.location = buffer.nextI8();
-        selection1.sequence = buffer.nextI8();
+        selection1.controller = buffer.nextU8();
+        selection1.location = buffer.nextU8();
+        selection1.sequence = buffer.nextU8();
         selection1.operation_param = buffer.nextI16();
       }
       selection.push(selection1)
@@ -1631,7 +1631,7 @@ function parseMsgSelectSum(buffer: BufferReader): MsgSelectSum {
   const result: any = { };
   { /* reading result (MsgSelectSum) */
     result.select_mode = buffer.nextI8();
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.sum_up_to = buffer.nextI32();
     const range: any = { };
     { /* reading range (Range) */
@@ -1645,9 +1645,9 @@ function parseMsgSelectSum(buffer: BufferReader): MsgSelectSum {
       const includes1: any = { };
       { /* reading includes1 (Selection) */
         includes1.code = buffer.nextU32();
-        includes1.controller = buffer.nextI8();
-        includes1.location = buffer.nextI8();
-        includes1.sequence = buffer.nextI8();
+        includes1.controller = buffer.nextU8();
+        includes1.location = buffer.nextU8();
+        includes1.sequence = buffer.nextU8();
         includes1.value = buffer.nextI32();
       }
       includes.push(includes1)
@@ -1659,9 +1659,9 @@ function parseMsgSelectSum(buffer: BufferReader): MsgSelectSum {
       const optionals1: any = { };
       { /* reading optionals1 (Selection) */
         optionals1.code = buffer.nextU32();
-        optionals1.controller = buffer.nextI8();
-        optionals1.location = buffer.nextI8();
-        optionals1.sequence = buffer.nextI8();
+        optionals1.controller = buffer.nextU8();
+        optionals1.location = buffer.nextU8();
+        optionals1.sequence = buffer.nextU8();
         optionals1.value = buffer.nextI32();
       }
       optionals.push(optionals1)
@@ -1678,16 +1678,16 @@ function parseMsgSelectSum(buffer: BufferReader): MsgSelectSum {
 function parseMsgSortCard(buffer: BufferReader): MsgSortCard {
   const result: any = { };
   { /* reading result (MsgSortCard) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const selection: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
       const selection1: any = { };
       { /* reading selection1 (Selection) */
         selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextI8();
-        selection1.location = buffer.nextI8();
-        selection1.sequence = buffer.nextI8();
+        selection1.controller = buffer.nextU8();
+        selection1.location = buffer.nextU8();
+        selection1.sequence = buffer.nextU8();
       }
       selection.push(selection1)
     }
@@ -1703,16 +1703,16 @@ function parseMsgSortCard(buffer: BufferReader): MsgSortCard {
 function parseMsgSortChain(buffer: BufferReader): MsgSortChain {
   const result: any = { };
   { /* reading result (MsgSortChain) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const selection: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
       const selection1: any = { };
       { /* reading selection1 (Selection) */
         selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextI8();
-        selection1.location = buffer.nextI8();
-        selection1.sequence = buffer.nextI8();
+        selection1.controller = buffer.nextU8();
+        selection1.location = buffer.nextU8();
+        selection1.sequence = buffer.nextU8();
       }
       selection.push(selection1)
     }
@@ -1728,16 +1728,16 @@ function parseMsgSortChain(buffer: BufferReader): MsgSortChain {
 function parseMsgConfirmDeckTop(buffer: BufferReader): MsgConfirmDeckTop {
   const result: any = { };
   { /* reading result (MsgConfirmDeckTop) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const selection: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
       const selection1: any = { };
       { /* reading selection1 (Selection) */
         selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextI8();
-        selection1.location = buffer.nextI8();
-        selection1.sequence = buffer.nextI8();
+        selection1.controller = buffer.nextU8();
+        selection1.location = buffer.nextU8();
+        selection1.sequence = buffer.nextU8();
       }
       selection.push(selection1)
     }
@@ -1753,16 +1753,16 @@ function parseMsgConfirmDeckTop(buffer: BufferReader): MsgConfirmDeckTop {
 function parseMsgConfirmExtratop(buffer: BufferReader): MsgConfirmExtratop {
   const result: any = { };
   { /* reading result (MsgConfirmExtratop) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const selection: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
       const selection1: any = { };
       { /* reading selection1 (Selection) */
         selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextI8();
-        selection1.location = buffer.nextI8();
-        selection1.sequence = buffer.nextI8();
+        selection1.controller = buffer.nextU8();
+        selection1.location = buffer.nextU8();
+        selection1.sequence = buffer.nextU8();
       }
       selection.push(selection1)
     }
@@ -1778,16 +1778,16 @@ function parseMsgConfirmExtratop(buffer: BufferReader): MsgConfirmExtratop {
 function parseMsgConfirmCards(buffer: BufferReader): MsgConfirmCards {
   const result: any = { };
   { /* reading result (MsgConfirmCards) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const selection: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
       const selection1: any = { };
       { /* reading selection1 (Selection) */
         selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextI8();
-        selection1.location = buffer.nextI8();
-        selection1.sequence = buffer.nextI8();
+        selection1.controller = buffer.nextU8();
+        selection1.location = buffer.nextU8();
+        selection1.sequence = buffer.nextU8();
       }
       selection.push(selection1)
     }
@@ -1803,7 +1803,7 @@ function parseMsgConfirmCards(buffer: BufferReader): MsgConfirmCards {
 function parseMsgShuffleDeck(buffer: BufferReader): MsgShuffleDeck {
   const result: any = { };
   { /* reading result (MsgShuffleDeck) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
   }
   result.msgtype = 'MSG_SHUFFLE_DECK';
   return result as MsgShuffleDeck;
@@ -1815,7 +1815,7 @@ function parseMsgShuffleDeck(buffer: BufferReader): MsgShuffleDeck {
 function parseMsgRefreshDeck(buffer: BufferReader): MsgRefreshDeck {
   const result: any = { };
   { /* reading result (MsgRefreshDeck) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
   }
   result.msgtype = 'MSG_REFRESH_DECK';
   return result as MsgRefreshDeck;
@@ -1827,7 +1827,7 @@ function parseMsgRefreshDeck(buffer: BufferReader): MsgRefreshDeck {
 function parseMsgSwapGraveDeck(buffer: BufferReader): MsgSwapGraveDeck {
   const result: any = { };
   { /* reading result (MsgSwapGraveDeck) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
   }
   result.msgtype = 'MSG_SWAP_GRAVE_DECK';
   return result as MsgSwapGraveDeck;
@@ -1839,7 +1839,7 @@ function parseMsgSwapGraveDeck(buffer: BufferReader): MsgSwapGraveDeck {
 function parseMsgShuffleHand(buffer: BufferReader): MsgShuffleHand {
   const result: any = { };
   { /* reading result (MsgShuffleHand) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const cards: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
@@ -1861,7 +1861,7 @@ function parseMsgShuffleHand(buffer: BufferReader): MsgShuffleHand {
 function parseMsgShuffleExtra(buffer: BufferReader): MsgShuffleExtra {
   const result: any = { };
   { /* reading result (MsgShuffleExtra) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const cards: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
@@ -1883,7 +1883,7 @@ function parseMsgShuffleExtra(buffer: BufferReader): MsgShuffleExtra {
 function parseMsgDraw(buffer: BufferReader): MsgDraw {
   const result: any = { };
   { /* reading result (MsgDraw) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const cards: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
@@ -1916,8 +1916,8 @@ function parseMsgReverseDeck(_buffer: BufferReader): MsgReverseDeck {
 function parseMsgDeckTop(buffer: BufferReader): MsgDeckTop {
   const result: any = { };
   { /* reading result (MsgDeckTop) */
-    result.player = buffer.nextI8();
-    result.sequence = buffer.nextI8();
+    result.player = buffer.nextU8();
+    result.sequence = buffer.nextU8();
     result.code = buffer.nextU32();
   }
   result.msgtype = 'MSG_DECK_TOP';
@@ -1930,7 +1930,7 @@ function parseMsgDeckTop(buffer: BufferReader): MsgDeckTop {
 function parseMsgShuffleSetCard(buffer: BufferReader): MsgShuffleSetCard {
   const result: any = { };
   { /* reading result (MsgShuffleSetCard) */
-    result.location = buffer.nextI8();
+    result.location = buffer.nextU8();
     const c1 = buffer.nextI8();
     /* c1: hidden */
     const pass1: any[] = [];
@@ -1938,9 +1938,9 @@ function parseMsgShuffleSetCard(buffer: BufferReader): MsgShuffleSetCard {
     for (let i = 0, n = c1; i !== n; ++i) {
       const pass11: any = { };
       { /* reading pass11 (Pass) */
-        pass11.controller = buffer.nextI8();
-        pass11.location = buffer.nextI8();
-        pass11.sequence = buffer.nextI8();
+        pass11.controller = buffer.nextU8();
+        pass11.location = buffer.nextU8();
+        pass11.sequence = buffer.nextU8();
         pass11.ignore = buffer.nextI8();
       }
       pass1.push(pass11)
@@ -1951,9 +1951,9 @@ function parseMsgShuffleSetCard(buffer: BufferReader): MsgShuffleSetCard {
     for (let i = 0, n = c1; i !== n; ++i) {
       const pass21: any = { };
       { /* reading pass21 (Pass) */
-        pass21.controller = buffer.nextI8();
-        pass21.location = buffer.nextI8();
-        pass21.sequence = buffer.nextI8();
+        pass21.controller = buffer.nextU8();
+        pass21.location = buffer.nextU8();
+        pass21.sequence = buffer.nextU8();
         pass21.ignore = buffer.nextI8();
       }
       pass2.push(pass21)
@@ -1970,7 +1970,7 @@ function parseMsgShuffleSetCard(buffer: BufferReader): MsgShuffleSetCard {
 function parseMsgNewTurn(buffer: BufferReader): MsgNewTurn {
   const result: any = { };
   { /* reading result (MsgNewTurn) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
   }
   result.msgtype = 'MSG_NEW_TURN';
   return result as MsgNewTurn;
@@ -1997,18 +1997,18 @@ function parseMsgMove(buffer: BufferReader): MsgMove {
     result.code = buffer.nextU32();
     const previous: any = { };
     { /* reading previous (Card) */
-      previous.controller = buffer.nextI8();
-      previous.location = buffer.nextI8();
-      previous.sequence = buffer.nextI8();
-      previous.position = buffer.nextI8();
+      previous.controller = buffer.nextU8();
+      previous.location = buffer.nextU8();
+      previous.sequence = buffer.nextU8();
+      previous.position = buffer.nextU8();
     }
     result.previous = previous;
     const current: any = { };
     { /* reading current (Card) */
-      current.controller = buffer.nextI8();
-      current.location = buffer.nextI8();
-      current.sequence = buffer.nextI8();
-      current.position = buffer.nextI8();
+      current.controller = buffer.nextU8();
+      current.location = buffer.nextU8();
+      current.sequence = buffer.nextU8();
+      current.position = buffer.nextU8();
     }
     result.current = current;
     result.reason = buffer.nextI32();
@@ -2024,11 +2024,11 @@ function parseMsgPosChange(buffer: BufferReader): MsgPosChange {
   const result: any = { };
   { /* reading result (MsgPosChange) */
     result.code = buffer.nextU32();
-    result.current_controller = buffer.nextI8();
-    result.current_location = buffer.nextI8();
-    result.current_sequence = buffer.nextI8();
-    result.previous_position = buffer.nextI8();
-    result.current_position = buffer.nextI8();
+    result.current_controller = buffer.nextU8();
+    result.current_location = buffer.nextU8();
+    result.current_sequence = buffer.nextU8();
+    result.previous_position = buffer.nextU8();
+    result.current_position = buffer.nextU8();
   }
   result.msgtype = 'MSG_POS_CHANGE';
   return result as MsgPosChange;
@@ -2041,10 +2041,10 @@ function parseMsgSet(buffer: BufferReader): MsgSet {
   const result: any = { };
   { /* reading result (MsgSet) */
     result.code = buffer.nextU32();
-    result.current_controller = buffer.nextI8();
-    result.current_location = buffer.nextI8();
-    result.current_sequence = buffer.nextI8();
-    result.current_position = buffer.nextI8();
+    result.current_controller = buffer.nextU8();
+    result.current_location = buffer.nextU8();
+    result.current_sequence = buffer.nextU8();
+    result.current_position = buffer.nextU8();
   }
   result.msgtype = 'MSG_SET';
   return result as MsgSet;
@@ -2059,19 +2059,19 @@ function parseMsgSwap(buffer: BufferReader): MsgSwap {
     const first: any = { };
     { /* reading first (Swapping) */
       first.code = buffer.nextU32();
-      first.controller = buffer.nextI8();
-      first.location = buffer.nextI8();
-      first.sequence = buffer.nextI8();
-      first.position = buffer.nextI8();
+      first.controller = buffer.nextU8();
+      first.location = buffer.nextU8();
+      first.sequence = buffer.nextU8();
+      first.position = buffer.nextU8();
     }
     result.first = first;
     const second: any = { };
     { /* reading second (Swapping) */
       second.code = buffer.nextU32();
-      second.controller = buffer.nextI8();
-      second.location = buffer.nextI8();
-      second.sequence = buffer.nextI8();
-      second.position = buffer.nextI8();
+      second.controller = buffer.nextU8();
+      second.location = buffer.nextU8();
+      second.sequence = buffer.nextU8();
+      second.position = buffer.nextU8();
     }
     result.second = second;
   }
@@ -2098,10 +2098,10 @@ function parseMsgSummoning(buffer: BufferReader): MsgSummoning {
   const result: any = { };
   { /* reading result (MsgSummoning) */
     result.code = buffer.nextU32();
-    result.controller = buffer.nextI8();
-    result.location = buffer.nextI8();
-    result.sequence = buffer.nextI8();
-    result.position = buffer.nextI8();
+    result.controller = buffer.nextU8();
+    result.location = buffer.nextU8();
+    result.sequence = buffer.nextU8();
+    result.position = buffer.nextU8();
   }
   result.msgtype = 'MSG_SUMMONING';
   return result as MsgSummoning;
@@ -2114,10 +2114,10 @@ function parseMsgSpsummoning(buffer: BufferReader): MsgSpsummoning {
   const result: any = { };
   { /* reading result (MsgSpsummoning) */
     result.code = buffer.nextU32();
-    result.controller = buffer.nextI8();
-    result.location = buffer.nextI8();
-    result.sequence = buffer.nextI8();
-    result.position = buffer.nextI8();
+    result.controller = buffer.nextU8();
+    result.location = buffer.nextU8();
+    result.sequence = buffer.nextU8();
+    result.position = buffer.nextU8();
   }
   result.msgtype = 'MSG_SPSUMMONING';
   return result as MsgSpsummoning;
@@ -2130,10 +2130,10 @@ function parseMsgFlipsummoning(buffer: BufferReader): MsgFlipsummoning {
   const result: any = { };
   { /* reading result (MsgFlipsummoning) */
     result.code = buffer.nextU32();
-    result.controller = buffer.nextI8();
-    result.location = buffer.nextI8();
-    result.sequence = buffer.nextI8();
-    result.position = buffer.nextI8();
+    result.controller = buffer.nextU8();
+    result.location = buffer.nextU8();
+    result.sequence = buffer.nextU8();
+    result.position = buffer.nextU8();
   }
   result.msgtype = 'MSG_FLIPSUMMONING';
   return result as MsgFlipsummoning;
@@ -2179,13 +2179,13 @@ function parseMsgChaining(buffer: BufferReader): MsgChaining {
   const result: any = { };
   { /* reading result (MsgChaining) */
     result.code = buffer.nextU32();
-    result.previous_chain_controller = buffer.nextI8();
-    result.previous_chain_location = buffer.nextI8();
-    result.previous_chain_sequence = buffer.nextI8();
-    result.subsequence = buffer.nextI8();
-    result.chain_controller = buffer.nextI8();
-    result.chain_location = buffer.nextI8();
-    result.chain_sequence = buffer.nextI8();
+    result.previous_chain_controller = buffer.nextU8();
+    result.previous_chain_location = buffer.nextU8();
+    result.previous_chain_sequence = buffer.nextU8();
+    result.subsequence = buffer.nextU8();
+    result.chain_controller = buffer.nextU8();
+    result.chain_location = buffer.nextU8();
+    result.chain_sequence = buffer.nextU8();
     result.desc = buffer.nextI32();
     result.param = buffer.nextI8();
   }
@@ -2286,10 +2286,10 @@ function parseMsgBecomeTarget(buffer: BufferReader): MsgBecomeTarget {
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
       const cards1: any = { };
       { /* reading cards1 (Card) */
-        cards1.controller = buffer.nextI8();
-        cards1.location = buffer.nextI8();
-        cards1.sequence = buffer.nextI8();
-        cards1.subsequence = buffer.nextI8();
+        cards1.controller = buffer.nextU8();
+        cards1.location = buffer.nextU8();
+        cards1.sequence = buffer.nextU8();
+        cards1.subsequence = buffer.nextU8();
       }
       cards.push(cards1)
     }
@@ -2305,16 +2305,16 @@ function parseMsgBecomeTarget(buffer: BufferReader): MsgBecomeTarget {
 function parseMsgRandomSelected(buffer: BufferReader): MsgRandomSelected {
   const result: any = { };
   { /* reading result (MsgRandomSelected) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const cards: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
       const cards1: any = { };
       { /* reading cards1 (Card) */
-        cards1.controller = buffer.nextI8();
-        cards1.location = buffer.nextI8();
-        cards1.sequence = buffer.nextI8();
-        cards1.subsequence = buffer.nextI8();
+        cards1.controller = buffer.nextU8();
+        cards1.location = buffer.nextU8();
+        cards1.sequence = buffer.nextU8();
+        cards1.subsequence = buffer.nextU8();
       }
       cards.push(cards1)
     }
@@ -2330,7 +2330,7 @@ function parseMsgRandomSelected(buffer: BufferReader): MsgRandomSelected {
 function parseMsgDamage(buffer: BufferReader): MsgDamage {
   const result: any = { };
   { /* reading result (MsgDamage) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.value = buffer.nextI32();
   }
   result.msgtype = 'MSG_DAMAGE';
@@ -2343,7 +2343,7 @@ function parseMsgDamage(buffer: BufferReader): MsgDamage {
 function parseMsgRecover(buffer: BufferReader): MsgRecover {
   const result: any = { };
   { /* reading result (MsgRecover) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.value = buffer.nextI32();
   }
   result.msgtype = 'MSG_RECOVER';
@@ -2356,7 +2356,7 @@ function parseMsgRecover(buffer: BufferReader): MsgRecover {
 function parseMsgLpUpdate(buffer: BufferReader): MsgLpUpdate {
   const result: any = { };
   { /* reading result (MsgLpUpdate) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.value = buffer.nextI32();
   }
   result.msgtype = 'MSG_LPUPDATE';
@@ -2369,7 +2369,7 @@ function parseMsgLpUpdate(buffer: BufferReader): MsgLpUpdate {
 function parseMsgPayLpCost(buffer: BufferReader): MsgPayLpCost {
   const result: any = { };
   { /* reading result (MsgPayLpCost) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.value = buffer.nextI32();
   }
   result.msgtype = 'MSG_PAY_LPCOST';
@@ -2384,17 +2384,17 @@ function parseMsgEquip(buffer: BufferReader): MsgEquip {
   { /* reading result (MsgEquip) */
     const card: any = { };
     { /* reading card (Card) */
-      card.controller = buffer.nextI8();
-      card.location = buffer.nextI8();
-      card.sequence = buffer.nextI8();
+      card.controller = buffer.nextU8();
+      card.location = buffer.nextU8();
+      card.sequence = buffer.nextU8();
       card.ignore = buffer.nextI8();
     }
     result.card = card;
     const target: any = { };
     { /* reading target (Card) */
-      target.controller = buffer.nextI8();
-      target.location = buffer.nextI8();
-      target.sequence = buffer.nextI8();
+      target.controller = buffer.nextU8();
+      target.location = buffer.nextU8();
+      target.sequence = buffer.nextU8();
       target.ignore = buffer.nextI8();
     }
     result.target = target;
@@ -2411,17 +2411,17 @@ function parseMsgCardTarget(buffer: BufferReader): MsgCardTarget {
   { /* reading result (MsgCardTarget) */
     const card: any = { };
     { /* reading card (Card) */
-      card.controller = buffer.nextI8();
-      card.location = buffer.nextI8();
-      card.sequence = buffer.nextI8();
+      card.controller = buffer.nextU8();
+      card.location = buffer.nextU8();
+      card.sequence = buffer.nextU8();
       card.ignore = buffer.nextI8();
     }
     result.card = card;
     const target: any = { };
     { /* reading target (Card) */
-      target.controller = buffer.nextI8();
-      target.location = buffer.nextI8();
-      target.sequence = buffer.nextI8();
+      target.controller = buffer.nextU8();
+      target.location = buffer.nextU8();
+      target.sequence = buffer.nextU8();
       target.ignore = buffer.nextI8();
     }
     result.target = target;
@@ -2438,17 +2438,17 @@ function parseMsgCancelTarget(buffer: BufferReader): MsgCancelTarget {
   { /* reading result (MsgCancelTarget) */
     const card: any = { };
     { /* reading card (Card) */
-      card.controller = buffer.nextI8();
-      card.location = buffer.nextI8();
-      card.sequence = buffer.nextI8();
+      card.controller = buffer.nextU8();
+      card.location = buffer.nextU8();
+      card.sequence = buffer.nextU8();
       card.ignore = buffer.nextI8();
     }
     result.card = card;
     const target: any = { };
     { /* reading target (Card) */
-      target.controller = buffer.nextI8();
-      target.location = buffer.nextI8();
-      target.sequence = buffer.nextI8();
+      target.controller = buffer.nextU8();
+      target.location = buffer.nextU8();
+      target.sequence = buffer.nextU8();
       target.ignore = buffer.nextI8();
     }
     result.target = target;
@@ -2463,9 +2463,9 @@ function parseMsgCancelTarget(buffer: BufferReader): MsgCancelTarget {
 function parseMsgUnequip(buffer: BufferReader): MsgUnequip {
   const result: any = { };
   { /* reading result (MsgUnequip) */
-    result.controller = buffer.nextI8();
-    result.location = buffer.nextI8();
-    result.sequence = buffer.nextI8();
+    result.controller = buffer.nextU8();
+    result.location = buffer.nextU8();
+    result.sequence = buffer.nextU8();
     result.ignore = buffer.nextI8();
   }
   result.msgtype = 'MSG_UNEQUIP';
@@ -2479,9 +2479,9 @@ function parseMsgAddCounter(buffer: BufferReader): MsgAddCounter {
   const result: any = { };
   { /* reading result (MsgAddCounter) */
     result.type = buffer.nextI16();
-    result.controller = buffer.nextI8();
-    result.location = buffer.nextI8();
-    result.sequence = buffer.nextI8();
+    result.controller = buffer.nextU8();
+    result.location = buffer.nextU8();
+    result.sequence = buffer.nextU8();
     result.count = buffer.nextI16();
   }
   result.msgtype = 'MSG_ADD_COUNTER';
@@ -2495,9 +2495,9 @@ function parseMsgRemoveCounter(buffer: BufferReader): MsgRemoveCounter {
   const result: any = { };
   { /* reading result (MsgRemoveCounter) */
     result.type = buffer.nextI16();
-    result.controller = buffer.nextI8();
-    result.location = buffer.nextI8();
-    result.sequence = buffer.nextI8();
+    result.controller = buffer.nextU8();
+    result.location = buffer.nextU8();
+    result.sequence = buffer.nextU8();
     result.count = buffer.nextI16();
   }
   result.msgtype = 'MSG_REMOVE_COUNTER';
@@ -2512,17 +2512,17 @@ function parseMsgAttack(buffer: BufferReader): MsgAttack {
   { /* reading result (MsgAttack) */
     const attacker: any = { };
     { /* reading attacker (Card) */
-      attacker.controller = buffer.nextI8();
-      attacker.location = buffer.nextI8();
-      attacker.sequence = buffer.nextI8();
+      attacker.controller = buffer.nextU8();
+      attacker.location = buffer.nextU8();
+      attacker.sequence = buffer.nextU8();
       attacker.ignore = buffer.nextI8();
     }
     result.attacker = attacker;
     const defender: any = { };
     { /* reading defender (Card) */
-      defender.controller = buffer.nextI8();
-      defender.location = buffer.nextI8();
-      defender.sequence = buffer.nextI8();
+      defender.controller = buffer.nextU8();
+      defender.location = buffer.nextU8();
+      defender.sequence = buffer.nextU8();
       defender.ignore = buffer.nextI8();
     }
     result.defender = defender;
@@ -2539,10 +2539,10 @@ function parseMsgBattle(buffer: BufferReader): MsgBattle {
   { /* reading result (MsgBattle) */
     const attacker: any = { };
     { /* reading attacker (Battle) */
-      attacker.controller = buffer.nextI8();
-      attacker.location = buffer.nextI8();
-      attacker.sequence = buffer.nextI8();
-      attacker.subsequence = buffer.nextI8();
+      attacker.controller = buffer.nextU8();
+      attacker.location = buffer.nextU8();
+      attacker.sequence = buffer.nextU8();
+      attacker.subsequence = buffer.nextU8();
       attacker.atkvalue = buffer.nextI32();
       attacker.defvalue = buffer.nextI32();
       attacker.ignore = buffer.nextI8();
@@ -2550,10 +2550,10 @@ function parseMsgBattle(buffer: BufferReader): MsgBattle {
     result.attacker = attacker;
     const defender: any = { };
     { /* reading defender (Battle) */
-      defender.controller = buffer.nextI8();
-      defender.location = buffer.nextI8();
-      defender.sequence = buffer.nextI8();
-      defender.subsequence = buffer.nextI8();
+      defender.controller = buffer.nextU8();
+      defender.location = buffer.nextU8();
+      defender.sequence = buffer.nextU8();
+      defender.subsequence = buffer.nextU8();
       defender.atkvalue = buffer.nextI32();
       defender.defvalue = buffer.nextI32();
       defender.ignore = buffer.nextI8();
@@ -2616,13 +2616,13 @@ function parseMsgMissedEffect(buffer: BufferReader): MsgMissedEffect {
 function parseMsgTossCoin(buffer: BufferReader): MsgTossCoin {
   const result: any = { };
   { /* reading result (MsgTossCoin) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const tosses: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
       const tosses1: any = { };
       { /* reading tosses1 (TossResult) */
-        tosses1.value = buffer.nextI8();
+        tosses1.value = buffer.nextU8();
       }
       tosses.push(tosses1)
     }
@@ -2638,13 +2638,13 @@ function parseMsgTossCoin(buffer: BufferReader): MsgTossCoin {
 function parseMsgTossDice(buffer: BufferReader): MsgTossDice {
   const result: any = { };
   { /* reading result (MsgTossDice) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const tosses: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
       const tosses1: any = { };
       { /* reading tosses1 (TossResult) */
-        tosses1.value = buffer.nextI8();
+        tosses1.value = buffer.nextU8();
       }
       tosses.push(tosses1)
     }
@@ -2660,7 +2660,7 @@ function parseMsgTossDice(buffer: BufferReader): MsgTossDice {
 function parseMsgRockPaperScissors(buffer: BufferReader): MsgRockPaperScissors {
   const result: any = { };
   { /* reading result (MsgRockPaperScissors) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
   }
   result.msgtype = 'MSG_ROCK_PAPER_SCISSORS';
   return result as MsgRockPaperScissors;
@@ -2672,7 +2672,7 @@ function parseMsgRockPaperScissors(buffer: BufferReader): MsgRockPaperScissors {
 function parseMsgHandRes(buffer: BufferReader): MsgHandRes {
   const result: any = { };
   { /* reading result (MsgHandRes) */
-    result.result = buffer.nextI8();
+    result.result = buffer.nextU8();
   }
   result.msgtype = 'MSG_HAND_RES';
   return result as MsgHandRes;
@@ -2684,9 +2684,9 @@ function parseMsgHandRes(buffer: BufferReader): MsgHandRes {
 function parseMsgAnnounceRace(buffer: BufferReader): MsgAnnounceRace {
   const result: any = { };
   { /* reading result (MsgAnnounceRace) */
-    result.player = buffer.nextI8();
-    result.count = buffer.nextI8();
-    result.available = buffer.nextI32();
+    result.player = buffer.nextU8();
+    result.count = buffer.nextU8();
+    result.available = buffer.nextU32();
   }
   result.msgtype = 'MSG_ANNOUNCE_RACE';
   return result as MsgAnnounceRace;
@@ -2698,9 +2698,9 @@ function parseMsgAnnounceRace(buffer: BufferReader): MsgAnnounceRace {
 function parseMsgAnnounceAttrib(buffer: BufferReader): MsgAnnounceAttrib {
   const result: any = { };
   { /* reading result (MsgAnnounceAttrib) */
-    result.player = buffer.nextI8();
-    result.count = buffer.nextI8();
-    result.available = buffer.nextI32();
+    result.player = buffer.nextU8();
+    result.count = buffer.nextU8();
+    result.available = buffer.nextU32();
   }
   result.msgtype = 'MSG_ANNOUNCE_ATTRIB';
   return result as MsgAnnounceAttrib;
@@ -2712,7 +2712,7 @@ function parseMsgAnnounceAttrib(buffer: BufferReader): MsgAnnounceAttrib {
 function parseMsgAnnounceCard(buffer: BufferReader): MsgAnnounceCard {
   const result: any = { };
   { /* reading result (MsgAnnounceCard) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.declarable_type = buffer.nextI32();
   }
   result.msgtype = 'MSG_ANNOUNCE_CARD';
@@ -2725,7 +2725,7 @@ function parseMsgAnnounceCard(buffer: BufferReader): MsgAnnounceCard {
 function parseMsgAnnounceNumber(buffer: BufferReader): MsgAnnounceNumber {
   const result: any = { };
   { /* reading result (MsgAnnounceNumber) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const announcements: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
@@ -2744,7 +2744,7 @@ function parseMsgAnnounceNumber(buffer: BufferReader): MsgAnnounceNumber {
 function parseMsgAnnounceCardFilter(buffer: BufferReader): MsgAnnounceCardFilter {
   const result: any = { };
   { /* reading result (MsgAnnounceCardFilter) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     const announcements: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
@@ -2763,9 +2763,9 @@ function parseMsgAnnounceCardFilter(buffer: BufferReader): MsgAnnounceCardFilter
 function parseMsgCardHint(buffer: BufferReader): MsgCardHint {
   const result: any = { };
   { /* reading result (MsgCardHint) */
-    result.controller = buffer.nextI8();
-    result.location = buffer.nextI8();
-    result.sequence = buffer.nextI8();
+    result.controller = buffer.nextU8();
+    result.location = buffer.nextU8();
+    result.sequence = buffer.nextU8();
     result.ignore = buffer.nextI8();
     result.chtype = buffer.nextI8();
     result.value = buffer.nextI32();
@@ -2780,7 +2780,7 @@ function parseMsgCardHint(buffer: BufferReader): MsgCardHint {
 function parseMsgPlayerHint(buffer: BufferReader): MsgPlayerHint {
   const result: any = { };
   { /* reading result (MsgPlayerHint) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.chtype = buffer.nextI8();
     result.value = buffer.nextI32();
   }
@@ -2806,7 +2806,7 @@ function parseMsgMatchKill(buffer: BufferReader): MsgMatchKill {
 function parseMsgTagSwap(buffer: BufferReader): MsgTagSwap {
   const result: any = { };
   { /* reading result (MsgTagSwap) */
-    result.player = buffer.nextI8();
+    result.player = buffer.nextU8();
     result.m = buffer.nextI8();
     result.e = buffer.nextI8();
     result.p = buffer.nextI8();
@@ -2835,7 +2835,7 @@ function parseMsgReloadField(buffer: BufferReader): MsgReloadField {
           if (_test_mzone_cards1) {
             const mzone_cards11: any = { };
             { /* reading mzone_cards11 (MCard) */
-              mzone_cards11.position = buffer.nextI8();
+              mzone_cards11.position = buffer.nextU8();
               mzone_cards11.xyz_count = buffer.nextI8();
             }
             mzone_cards1 = mzone_cards11;
@@ -2848,31 +2848,31 @@ function parseMsgReloadField(buffer: BufferReader): MsgReloadField {
           const _test_card_positions1 = buffer.nextU8()
           let card_positions1;
           if (_test_card_positions1) {
-            const card_positions11 = buffer.nextI8();
+            const card_positions11 = buffer.nextU8();
             card_positions1 = card_positions11;
           }
           card_positions.push(card_positions1);
         }
         players1.card_positions = card_positions;
-        players1.deck_count = buffer.nextI8();
-        players1.hand_count = buffer.nextI8();
-        players1.grave_count = buffer.nextI8();
-        players1.banish_count = buffer.nextI8();
-        players1.extra_count = buffer.nextI8();
-        players1.extra_pendu_count = buffer.nextI8();
+        players1.deck_count = buffer.nextU8();
+        players1.hand_count = buffer.nextU8();
+        players1.grave_count = buffer.nextU8();
+        players1.banish_count = buffer.nextU8();
+        players1.extra_count = buffer.nextU8();
+        players1.extra_pendu_count = buffer.nextU8();
         const chains: any[] = [];
         // tslint:disable-next-line:one-variable-per-declaration
         for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
           const chains1: any = { };
           { /* reading chains1 (Chain) */
             chains1.code = buffer.nextU32();
-            chains1.previous_controller = buffer.nextI8();
-            chains1.previous_location = buffer.nextI8();
-            chains1.previous_sequence = buffer.nextI8();
-            chains1.previous_subsequence = buffer.nextI8();
-            chains1.current_controller = buffer.nextI8();
-            chains1.current_location = buffer.nextI8();
-            chains1.current_sequence = buffer.nextI8();
+            chains1.previous_controller = buffer.nextU8();
+            chains1.previous_location = buffer.nextU8();
+            chains1.previous_sequence = buffer.nextU8();
+            chains1.previous_subsequence = buffer.nextU8();
+            chains1.current_controller = buffer.nextU8();
+            chains1.current_location = buffer.nextU8();
+            chains1.current_sequence = buffer.nextU8();
             chains1.desc = buffer.nextI32();
           }
           chains.push(chains1)
