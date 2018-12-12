@@ -97,7 +97,7 @@ export interface MsgUpdateData {
       position: number;
       sequence: number;
     }>;
-    equip_cards: Array<{
+    equip_card: Optional<{
       controller: number;
       location: number;
       position: number;
@@ -115,8 +115,7 @@ export interface MsgUpdateData {
       count: number;
     }>;
     owner: Optional<number>;
-    is_disabled: Optional<number>;
-    is_public: Optional<number>;
+    status: Optional<number>;
     lscale: Optional<number>;
     rscale: Optional<number>;
     link: Optional<number>;
@@ -154,7 +153,7 @@ export interface MsgUpdateCard {
     position: number;
     sequence: number;
   }>;
-  equip_cards: Array<{
+  equip_card: Optional<{
     controller: number;
     location: number;
     position: number;
@@ -172,8 +171,7 @@ export interface MsgUpdateCard {
     count: number;
   }>;
   owner: Optional<number>;
-  is_disabled: Optional<number>;
-  is_public: Optional<number>;
+  status: Optional<number>;
   lscale: Optional<number>;
   rscale: Optional<number>;
   link: Optional<number>;
@@ -1086,7 +1084,7 @@ export interface QueryCardChunk {
     position: number;
     sequence: number;
   }>;
-  equip_cards: Array<{
+  equip_card: Optional<{
     controller: number;
     location: number;
     position: number;
@@ -1104,8 +1102,7 @@ export interface QueryCardChunk {
     count: number;
   }>;
   owner: Optional<number>;
-  is_disabled: Optional<number>;
-  is_public: Optional<number>;
+  status: Optional<number>;
   lscale: Optional<number>;
   rscale: Optional<number>;
   link: Optional<number>;
@@ -1156,7 +1153,7 @@ function parseChunks(buffer: BufferReader): any[] {
     if (flags & QUERY.REASON) chunk.reason = buffer.nextI32();
 
     if (flags & QUERY.REASON_CARD) chunk.reason_card = parseInfoLocation(buffer);
-    if (flags & QUERY.EQUIP_CARD) chunk.equip_cards = parseInfoLocations(buffer);
+    if (flags & QUERY.EQUIP_CARD) chunk.equip_card = parseInfoLocation(buffer);
     if (flags & QUERY.TARGET_CARD) chunk.target_cards = parseInfoLocations(buffer);
     if (flags & QUERY.OVERLAY_CARD) {
       const count = buffer.nextU32();
@@ -1171,8 +1168,7 @@ function parseChunks(buffer: BufferReader): any[] {
       }
     }
     if (flags & QUERY.OWNER) chunk.owner = buffer.nextU32();
-    if (flags & QUERY.IS_DISABLED) chunk.is_disabled = buffer.nextU32();
-    if (flags & QUERY.IS_PUBLIC) chunk.is_public = buffer.nextU32();
+    if (flags & QUERY.STATUS) chunk.status = buffer.nextU32();
     if (flags & QUERY.LSCALE) chunk.lscale = buffer.nextU32();
     if (flags & QUERY.RSCALE) chunk.rscale = buffer.nextU32();
 
@@ -3136,6 +3132,39 @@ export const REASON = {
   LINK: 0x000010000000,
 }
 
+export const STATUS = {
+  DISABLED: 0x000000000001,
+  TO_ENABLE: 0x000000000002,
+  TO_DISABLE: 0x000000000004,
+  PROC_COMPLETE: 0x000000000008,
+  SET_TURN: 0x000000000010,
+  NO_LEVEL: 0x000000000020,
+  BATTLE_RESULT: 0x000000000040,
+  SPSUMMON_STEP: 0x000000000080,
+  FORM_CHANGED: 0x000000000100,
+  SUMMONING: 0x000000000200,
+  EFFECT_ENABLED: 0x000000000400,
+  SUMMON_TURN: 0x000000000800,
+  DESTROY_CONFIRMED: 0x000000001000,
+  LEAVE_CONFIRMED: 0x000000002000,
+  BATTLE_DESTROYED: 0x000000004000,
+  COPYING_EFFECT: 0x000000008000,
+  CHAINING: 0x000000010000,
+  SUMMON_DISABLED: 0x000000020000,
+  ACTIVATE_DISABLED: 0x000000040000,
+  EFFECT_REPLACED: 0x000000080000,
+  FUTURE_FUSION: 0x000000100000,
+  ATTACK_CANCELED: 0x000000200000,
+  INITIALIZING: 0x000000400000,
+  JUST_POS: 0x000001000000,
+  CONTINUOUS_POS: 0x000002000000,
+  FORBIDDEN: 0x000004000000,
+  ACT_FROM_HAND: 0x000008000000,
+  OPPO_BATTLE: 0x000010000000,
+  FLIP_SUMMON_TURN: 0x000020000000,
+  SPSUMMON_TURN: 0x000040000000,
+}
+
 export const QUERY = {
   CODE: 0x000000000001,
   POSITION: 0x000000000002,
@@ -3156,8 +3185,7 @@ export const QUERY = {
   OVERLAY_CARD: 0x000000010000,
   COUNTERS: 0x000000020000,
   OWNER: 0x000000040000,
-  IS_DISABLED: 0x000000080000,
-  IS_PUBLIC: 0x000000100000,
+  STATUS: 0x000000080000,
   LSCALE: 0x000000200000,
   RSCALE: 0x000000400000,
   LINK: 0x000000800000,
@@ -3351,9 +3379,9 @@ export const DUEL = {
 /**
  * questions to the players
  */
-export type Question = MsgSelectBattleCmd | MsgSelectIdleCmd | MsgSelectEffectyn | MsgSelectYesno | MsgSelectOption | MsgSelectCard | MsgSelectUnselectCard | MsgSelectChain | MsgSelectPlace | MsgSelectDisfield | MsgSelectPosition | MsgSelectTribute | MsgSelectCounter | MsgSelectSum | MsgSortCard | MsgSortChain | MsgAnnounceRace | MsgAnnounceAttrib | MsgAnnounceCard | MsgAnnounceNumber | MsgAnnounceCardFilter;
+export type Question = MsgSelectBattleCmd | MsgSelectIdleCmd | MsgSelectEffectyn | MsgSelectYesno | MsgSelectOption | MsgSelectCard | MsgSelectUnselectCard | MsgSelectChain | MsgSelectPlace | MsgSelectDisfield | MsgSelectPosition | MsgSelectTribute | MsgSelectCounter | MsgSelectSum | MsgSortCard | MsgSortChain | MsgRockPaperScissors | MsgAnnounceRace | MsgAnnounceAttrib | MsgAnnounceCard | MsgAnnounceNumber | MsgAnnounceCardFilter;
 
-const questionTypes = [ 'MSG_SELECT_BATTLECMD', 'MSG_SELECT_IDLECMD', 'MSG_SELECT_EFFECTYN', 'MSG_SELECT_YESNO', 'MSG_SELECT_OPTION', 'MSG_SELECT_CARD', 'MSG_SELECT_UNSELECT_CARD', 'MSG_SELECT_CHAIN', 'MSG_SELECT_PLACE', 'MSG_SELECT_DISFIELD', 'MSG_SELECT_POSITION', 'MSG_SELECT_TRIBUTE', 'MSG_SELECT_COUNTER', 'MSG_SELECT_SUM', 'MSG_SORT_CARD', 'MSG_SORT_CHAIN', 'MSG_ANNOUNCE_RACE', 'MSG_ANNOUNCE_ATTRIB', 'MSG_ANNOUNCE_CARD', 'MSG_ANNOUNCE_NUMBER', 'MSG_ANNOUNCE_CARD_FILTER' ];
+const questionTypes = [ 'MSG_SELECT_BATTLECMD', 'MSG_SELECT_IDLECMD', 'MSG_SELECT_EFFECTYN', 'MSG_SELECT_YESNO', 'MSG_SELECT_OPTION', 'MSG_SELECT_CARD', 'MSG_SELECT_UNSELECT_CARD', 'MSG_SELECT_CHAIN', 'MSG_SELECT_PLACE', 'MSG_SELECT_DISFIELD', 'MSG_SELECT_POSITION', 'MSG_SELECT_TRIBUTE', 'MSG_SELECT_COUNTER', 'MSG_SELECT_SUM', 'MSG_SORT_CARD', 'MSG_SORT_CHAIN', 'MSG_ROCK_PAPER_SCISSORS', 'MSG_ANNOUNCE_RACE', 'MSG_ANNOUNCE_ATTRIB', 'MSG_ANNOUNCE_CARD', 'MSG_ANNOUNCE_NUMBER', 'MSG_ANNOUNCE_CARD_FILTER' ];
 
 /**
  * check if a given message is a 'question'
