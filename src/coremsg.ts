@@ -2866,7 +2866,95 @@ function parseMsgReloadField(buffer: BufferReader): MsgReloadField {
 /**
  * message type
  */
-export type Message = MsgRetry | MsgHint | MsgWin | MsgWaiting | MsgStart | MsgUpdateData | MsgUpdateCard | MsgSelectBattleCmd | MsgSelectIdleCmd | MsgSelectEffectyn | MsgSelectYesno | MsgSelectOption | MsgSelectCard | MsgSelectUnselectCard | MsgSelectChain | MsgSelectPlace | MsgSelectDisfield | MsgSelectPosition | MsgSelectTribute | MsgSelectCounter | MsgSelectSum | MsgSortCard | MsgSortChain | MsgConfirmDeckTop | MsgConfirmExtratop | MsgConfirmCards | MsgShuffleDeck | MsgRefreshDeck | MsgSwapGraveDeck | MsgNewTurn | MsgShuffleHand | MsgShuffleExtra | MsgDraw | MsgReverseDeck | MsgDeckTop | MsgShuffleSetCard | MsgNewPhase | MsgMove | MsgPosChange | MsgSet | MsgSwap | MsgFieldDisabled | MsgSummoning | MsgSpsummoning | MsgFlipsummoning | MsgSummoned | MsgSpsummoned | MsgFlipsummoned | MsgChaining | MsgChained | MsgChainSolving | MsgChainSolved | MsgChainNegated | MsgChainDisabled | MsgChainEnd | MsgCardSelected | MsgBecomeTarget | MsgRandomSelected | MsgDamage | MsgRecover | MsgLpUpdate | MsgPayLpCost | MsgEquip | MsgCardTarget | MsgCancelTarget | MsgUnequip | MsgAddCounter | MsgRemoveCounter | MsgAttack | MsgBattle | MsgAttackDisabled | MsgDamageStepStart | MsgDamageStepEnd | MsgMissedEffect | MsgTossCoin | MsgTossDice | MsgRockPaperScissors | MsgHandRes | MsgAnnounceRace | MsgAnnounceAttrib | MsgAnnounceCard | MsgAnnounceNumber | MsgAnnounceCardFilter | MsgCardHint | MsgPlayerHint | MsgMatchKill | MsgTagSwap | MsgReloadField;
+export type Message = MsgRetry
+                    | MsgHint
+                    | MsgWin
+                    | MsgWaiting
+                    | MsgStart
+                    | MsgUpdateData
+                    | MsgUpdateCard
+                    | MsgSelectBattleCmd
+                    | MsgSelectIdleCmd
+                    | MsgSelectEffectyn
+                    | MsgSelectYesno
+                    | MsgSelectOption
+                    | MsgSelectCard
+                    | MsgSelectUnselectCard
+                    | MsgSelectChain
+                    | MsgSelectPlace
+                    | MsgSelectDisfield
+                    | MsgSelectPosition
+                    | MsgSelectTribute
+                    | MsgSelectCounter
+                    | MsgSelectSum
+                    | MsgSortCard
+                    | MsgSortChain
+                    | MsgConfirmDeckTop
+                    | MsgConfirmExtratop
+                    | MsgConfirmCards
+                    | MsgShuffleDeck
+                    | MsgRefreshDeck
+                    | MsgSwapGraveDeck
+                    | MsgNewTurn
+                    | MsgShuffleHand
+                    | MsgShuffleExtra
+                    | MsgDraw
+                    | MsgReverseDeck
+                    | MsgDeckTop
+                    | MsgShuffleSetCard
+                    | MsgNewPhase
+                    | MsgMove
+                    | MsgPosChange
+                    | MsgSet
+                    | MsgSwap
+                    | MsgFieldDisabled
+                    | MsgSummoning
+                    | MsgSpsummoning
+                    | MsgFlipsummoning
+                    | MsgSummoned
+                    | MsgSpsummoned
+                    | MsgFlipsummoned
+                    | MsgChaining
+                    | MsgChained
+                    | MsgChainSolving
+                    | MsgChainSolved
+                    | MsgChainNegated
+                    | MsgChainDisabled
+                    | MsgChainEnd
+                    | MsgCardSelected
+                    | MsgBecomeTarget
+                    | MsgRandomSelected
+                    | MsgDamage
+                    | MsgRecover
+                    | MsgLpUpdate
+                    | MsgPayLpCost
+                    | MsgEquip
+                    | MsgCardTarget
+                    | MsgCancelTarget
+                    | MsgUnequip
+                    | MsgAddCounter
+                    | MsgRemoveCounter
+                    | MsgAttack
+                    | MsgBattle
+                    | MsgAttackDisabled
+                    | MsgDamageStepStart
+                    | MsgDamageStepEnd
+                    | MsgMissedEffect
+                    | MsgTossCoin
+                    | MsgTossDice
+                    | MsgRockPaperScissors
+                    | MsgHandRes
+                    | MsgAnnounceRace
+                    | MsgAnnounceAttrib
+                    | MsgAnnounceCard
+                    | MsgAnnounceNumber
+                    | MsgAnnounceCardFilter
+                    | MsgCardHint
+                    | MsgPlayerHint
+                    | MsgMatchKill
+                    | MsgTagSwap
+                    | MsgReloadField
+                    ;
 
 /**
  * parse one message
@@ -3360,9 +3448,53 @@ export const DUEL = {
 /**
  * questions to the players
  */
-export type Question = MsgSelectBattleCmd | MsgSelectIdleCmd | MsgSelectEffectyn | MsgSelectYesno | MsgSelectOption | MsgSelectCard | MsgSelectUnselectCard | MsgSelectChain | MsgSelectPlace | MsgSelectDisfield | MsgSelectPosition | MsgSelectTribute | MsgSelectCounter | MsgSelectSum | MsgSortCard | MsgSortChain | MsgRockPaperScissors | MsgAnnounceRace | MsgAnnounceAttrib | MsgAnnounceCard | MsgAnnounceNumber | MsgAnnounceCardFilter;
+export type Question = MsgSelectBattleCmd
+                     | MsgSelectIdleCmd
+                     | MsgSelectEffectyn
+                     | MsgSelectYesno
+                     | MsgSelectOption
+                     | MsgSelectCard
+                     | MsgSelectUnselectCard
+                     | MsgSelectChain
+                     | MsgSelectPlace
+                     | MsgSelectDisfield
+                     | MsgSelectPosition
+                     | MsgSelectTribute
+                     | MsgSelectCounter
+                     | MsgSelectSum
+                     | MsgSortCard
+                     | MsgSortChain
+                     | MsgRockPaperScissors
+                     | MsgAnnounceRace
+                     | MsgAnnounceAttrib
+                     | MsgAnnounceCard
+                     | MsgAnnounceNumber
+                     | MsgAnnounceCardFilter
+                     ;
 
-const questionTypes = [ 'MSG_SELECT_BATTLECMD', 'MSG_SELECT_IDLECMD', 'MSG_SELECT_EFFECTYN', 'MSG_SELECT_YESNO', 'MSG_SELECT_OPTION', 'MSG_SELECT_CARD', 'MSG_SELECT_UNSELECT_CARD', 'MSG_SELECT_CHAIN', 'MSG_SELECT_PLACE', 'MSG_SELECT_DISFIELD', 'MSG_SELECT_POSITION', 'MSG_SELECT_TRIBUTE', 'MSG_SELECT_COUNTER', 'MSG_SELECT_SUM', 'MSG_SORT_CARD', 'MSG_SORT_CHAIN', 'MSG_ROCK_PAPER_SCISSORS', 'MSG_ANNOUNCE_RACE', 'MSG_ANNOUNCE_ATTRIB', 'MSG_ANNOUNCE_CARD', 'MSG_ANNOUNCE_NUMBER', 'MSG_ANNOUNCE_CARD_FILTER' ];
+const questionTypes = [ 'MSG_SELECT_BATTLECMD'
+                      , 'MSG_SELECT_IDLECMD'
+                      , 'MSG_SELECT_EFFECTYN'
+                      , 'MSG_SELECT_YESNO'
+                      , 'MSG_SELECT_OPTION'
+                      , 'MSG_SELECT_CARD'
+                      , 'MSG_SELECT_UNSELECT_CARD'
+                      , 'MSG_SELECT_CHAIN'
+                      , 'MSG_SELECT_PLACE'
+                      , 'MSG_SELECT_DISFIELD'
+                      , 'MSG_SELECT_POSITION'
+                      , 'MSG_SELECT_TRIBUTE'
+                      , 'MSG_SELECT_COUNTER'
+                      , 'MSG_SELECT_SUM'
+                      , 'MSG_SORT_CARD'
+                      , 'MSG_SORT_CHAIN'
+                      , 'MSG_ROCK_PAPER_SCISSORS'
+                      , 'MSG_ANNOUNCE_RACE'
+                      , 'MSG_ANNOUNCE_ATTRIB'
+                      , 'MSG_ANNOUNCE_CARD'
+                      , 'MSG_ANNOUNCE_NUMBER'
+                      , 'MSG_ANNOUNCE_CARD_FILTER'
+/* SHUT UP LINTER! */ ];
 
 /**
  * check if a given message is a 'question'
