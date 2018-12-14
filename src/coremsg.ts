@@ -357,7 +357,7 @@ export interface MsgSelectTribute {
     minimal: number;
     maximal: number;
   };
-  selection: Array<{
+  selections: Array<{
     code: number;
     controller: number;
     location: number;
@@ -371,7 +371,7 @@ export interface MsgSelectCounter {
   player: number;
   type: number;
   count: number;
-  selection: Array<{
+  selections: Array<{
     code: number;
     controller: number;
     location: number;
@@ -430,7 +430,7 @@ export interface MsgSortChain {
 export interface MsgConfirmDeckTop {
   msgtype: 'MSG_CONFIRM_DECKTOP';
   player: number;
-  selection: Array<{
+  cards: Array<{
     code: number;
     controller: number;
     location: number;
@@ -441,7 +441,7 @@ export interface MsgConfirmDeckTop {
 export interface MsgConfirmExtratop {
   msgtype: 'MSG_CONFIRM_EXTRATOP';
   player: number;
-  selection: Array<{
+  cards: Array<{
     code: number;
     controller: number;
     location: number;
@@ -452,7 +452,7 @@ export interface MsgConfirmExtratop {
 export interface MsgConfirmCards {
   msgtype: 'MSG_CONFIRM_CARDS';
   player: number;
-  selection: Array<{
+  cards: Array<{
     code: number;
     controller: number;
     location: number;
@@ -475,28 +475,27 @@ export interface MsgSwapGraveDeck {
   player: number;
 }
 
+export interface MsgNewTurn {
+  msgtype: 'MSG_NEW_TURN';
+  player: number;
+}
+
 export interface MsgShuffleHand {
   msgtype: 'MSG_SHUFFLE_HAND';
   player: number;
-  cards: Array<{
-    code: number;
-  }>;
+  cards: Array<number>;
 }
 
 export interface MsgShuffleExtra {
   msgtype: 'MSG_SHUFFLE_EXTRA';
   player: number;
-  cards: Array<{
-    code: number;
-  }>;
+  cards: Array<number>;
 }
 
 export interface MsgDraw {
   msgtype: 'MSG_DRAW';
   player: number;
-  cards: Array<{
-    code: number;
-  }>;
+  cards: Array<number>;
 }
 
 export interface MsgReverseDeck {
@@ -526,11 +525,6 @@ export interface MsgShuffleSetCard {
     sequence: number;
     ignore: number;
   }>;
-}
-
-export interface MsgNewTurn {
-  msgtype: 'MSG_NEW_TURN';
-  player: number;
 }
 
 export interface MsgNewPhase {
@@ -569,10 +563,10 @@ export interface MsgPosChange {
 export interface MsgSet {
   msgtype: 'MSG_SET';
   code: number;
-  current_controller: number;
-  current_location: number;
-  current_sequence: number;
-  current_position: number;
+  controller: number;
+  location: number;
+  sequence: number;
+  position: number;
 }
 
 export interface MsgSwap {
@@ -640,13 +634,13 @@ export interface MsgFlipsummoned {
 export interface MsgChaining {
   msgtype: 'MSG_CHAINING';
   code: number;
-  previous_chain_controller: number;
-  previous_chain_location: number;
-  previous_chain_sequence: number;
+  previous_controller: number;
+  previous_location: number;
+  previous_sequence: number;
   subsequence: number;
-  chain_controller: number;
-  chain_location: number;
-  chain_sequence: number;
+  controller: number;
+  location: number;
+  sequence: number;
   desc: number;
   param: number;
 }
@@ -855,24 +849,23 @@ export interface MsgDamageStepEnd {
 
 export interface MsgMissedEffect {
   msgtype: 'MSG_MISSED_EFFECT';
-  ignore: number;
+  controller: number;
+  location: number;
+  sequence: number;
+  subsequence: number;
   code: number;
 }
 
 export interface MsgTossCoin {
   msgtype: 'MSG_TOSS_COIN';
   player: number;
-  tosses: Array<{
-    value: number;
-  }>;
+  tosses: Array<number>;
 }
 
 export interface MsgTossDice {
   msgtype: 'MSG_TOSS_DICE';
   player: number;
-  tosses: Array<{
-    value: number;
-  }>;
+  tosses: Array<number>;
 }
 
 export interface MsgRockPaperScissors {
@@ -1573,20 +1566,20 @@ function parseMsgSelectTribute(buffer: BufferReader): MsgSelectTribute {
       range.maximal = buffer.nextI8();
     }
     result.range = range;
-    const selection: any[] = [];
+    const selections: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
-      const selection1: any = { };
-      { /* reading selection1 (Selection) */
-        selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextU8();
-        selection1.location = buffer.nextU8();
-        selection1.sequence = buffer.nextU8();
-        selection1.operation_param = buffer.nextI8();
+      const selections1: any = { };
+      { /* reading selections1 (Selection) */
+        selections1.code = buffer.nextU32();
+        selections1.controller = buffer.nextU8();
+        selections1.location = buffer.nextU8();
+        selections1.sequence = buffer.nextU8();
+        selections1.operation_param = buffer.nextI8();
       }
-      selection.push(selection1)
+      selections.push(selections1)
     }
-    result.selection = selection;
+    result.selections = selections;
   }
   result.msgtype = 'MSG_SELECT_TRIBUTE';
   return result as MsgSelectTribute;
@@ -1601,20 +1594,20 @@ function parseMsgSelectCounter(buffer: BufferReader): MsgSelectCounter {
     result.player = buffer.nextU8();
     result.type = buffer.nextI16();
     result.count = buffer.nextI16();
-    const selection: any[] = [];
+    const selections: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
-      const selection1: any = { };
-      { /* reading selection1 (Selection) */
-        selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextU8();
-        selection1.location = buffer.nextU8();
-        selection1.sequence = buffer.nextU8();
-        selection1.operation_param = buffer.nextI16();
+      const selections1: any = { };
+      { /* reading selections1 (Selection) */
+        selections1.code = buffer.nextU32();
+        selections1.controller = buffer.nextU8();
+        selections1.location = buffer.nextU8();
+        selections1.sequence = buffer.nextU8();
+        selections1.operation_param = buffer.nextI16();
       }
-      selection.push(selection1)
+      selections.push(selections1)
     }
-    result.selection = selection;
+    result.selections = selections;
   }
   result.msgtype = 'MSG_SELECT_COUNTER';
   return result as MsgSelectCounter;
@@ -1725,19 +1718,19 @@ function parseMsgConfirmDeckTop(buffer: BufferReader): MsgConfirmDeckTop {
   const result: any = { };
   { /* reading result (MsgConfirmDeckTop) */
     result.player = buffer.nextU8();
-    const selection: any[] = [];
+    const cards: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
-      const selection1: any = { };
-      { /* reading selection1 (Selection) */
-        selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextU8();
-        selection1.location = buffer.nextU8();
-        selection1.sequence = buffer.nextU8();
+      const cards1: any = { };
+      { /* reading cards1 (ConfirmCard) */
+        cards1.code = buffer.nextU32();
+        cards1.controller = buffer.nextU8();
+        cards1.location = buffer.nextU8();
+        cards1.sequence = buffer.nextU8();
       }
-      selection.push(selection1)
+      cards.push(cards1)
     }
-    result.selection = selection;
+    result.cards = cards;
   }
   result.msgtype = 'MSG_CONFIRM_DECKTOP';
   return result as MsgConfirmDeckTop;
@@ -1750,19 +1743,19 @@ function parseMsgConfirmExtratop(buffer: BufferReader): MsgConfirmExtratop {
   const result: any = { };
   { /* reading result (MsgConfirmExtratop) */
     result.player = buffer.nextU8();
-    const selection: any[] = [];
+    const cards: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
-      const selection1: any = { };
-      { /* reading selection1 (Selection) */
-        selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextU8();
-        selection1.location = buffer.nextU8();
-        selection1.sequence = buffer.nextU8();
+      const cards1: any = { };
+      { /* reading cards1 (ConfirmCard) */
+        cards1.code = buffer.nextU32();
+        cards1.controller = buffer.nextU8();
+        cards1.location = buffer.nextU8();
+        cards1.sequence = buffer.nextU8();
       }
-      selection.push(selection1)
+      cards.push(cards1)
     }
-    result.selection = selection;
+    result.cards = cards;
   }
   result.msgtype = 'MSG_CONFIRM_EXTRATOP';
   return result as MsgConfirmExtratop;
@@ -1775,19 +1768,19 @@ function parseMsgConfirmCards(buffer: BufferReader): MsgConfirmCards {
   const result: any = { };
   { /* reading result (MsgConfirmCards) */
     result.player = buffer.nextU8();
-    const selection: any[] = [];
+    const cards: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
-      const selection1: any = { };
-      { /* reading selection1 (Selection) */
-        selection1.code = buffer.nextU32();
-        selection1.controller = buffer.nextU8();
-        selection1.location = buffer.nextU8();
-        selection1.sequence = buffer.nextU8();
+      const cards1: any = { };
+      { /* reading cards1 (ConfirmCard) */
+        cards1.code = buffer.nextU32();
+        cards1.controller = buffer.nextU8();
+        cards1.location = buffer.nextU8();
+        cards1.sequence = buffer.nextU8();
       }
-      selection.push(selection1)
+      cards.push(cards1)
     }
-    result.selection = selection;
+    result.cards = cards;
   }
   result.msgtype = 'MSG_CONFIRM_CARDS';
   return result as MsgConfirmCards;
@@ -1830,6 +1823,18 @@ function parseMsgSwapGraveDeck(buffer: BufferReader): MsgSwapGraveDeck {
 }
 
 /**
+ * parse bytes as MsgNewTurn (MSG_NEW_TURN)
+ */
+function parseMsgNewTurn(buffer: BufferReader): MsgNewTurn {
+  const result: any = { };
+  { /* reading result (MsgNewTurn) */
+    result.player = buffer.nextU8();
+  }
+  result.msgtype = 'MSG_NEW_TURN';
+  return result as MsgNewTurn;
+}
+
+/**
  * parse bytes as MsgShuffleHand (MSG_SHUFFLE_HAND)
  */
 function parseMsgShuffleHand(buffer: BufferReader): MsgShuffleHand {
@@ -1839,10 +1844,7 @@ function parseMsgShuffleHand(buffer: BufferReader): MsgShuffleHand {
     const cards: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
-      const cards1: any = { };
-      { /* reading cards1 (Card) */
-        cards1.code = buffer.nextU32();
-      }
+      const cards1 = buffer.nextU32();
       cards.push(cards1)
     }
     result.cards = cards;
@@ -1861,10 +1863,7 @@ function parseMsgShuffleExtra(buffer: BufferReader): MsgShuffleExtra {
     const cards: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
-      const cards1: any = { };
-      { /* reading cards1 (Card) */
-        cards1.code = buffer.nextU32();
-      }
+      const cards1 = buffer.nextU32();
       cards.push(cards1)
     }
     result.cards = cards;
@@ -1883,10 +1882,7 @@ function parseMsgDraw(buffer: BufferReader): MsgDraw {
     const cards: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
-      const cards1: any = { };
-      { /* reading cards1 (Card) */
-        cards1.code = buffer.nextU32();
-      }
+      const cards1 = buffer.nextU32();
       cards.push(cards1)
     }
     result.cards = cards;
@@ -1961,18 +1957,6 @@ function parseMsgShuffleSetCard(buffer: BufferReader): MsgShuffleSetCard {
 }
 
 /**
- * parse bytes as MsgNewTurn (MSG_NEW_TURN)
- */
-function parseMsgNewTurn(buffer: BufferReader): MsgNewTurn {
-  const result: any = { };
-  { /* reading result (MsgNewTurn) */
-    result.player = buffer.nextU8();
-  }
-  result.msgtype = 'MSG_NEW_TURN';
-  return result as MsgNewTurn;
-}
-
-/**
  * parse bytes as MsgNewPhase (MSG_NEW_PHASE)
  */
 function parseMsgNewPhase(buffer: BufferReader): MsgNewPhase {
@@ -2037,10 +2021,10 @@ function parseMsgSet(buffer: BufferReader): MsgSet {
   const result: any = { };
   { /* reading result (MsgSet) */
     result.code = buffer.nextU32();
-    result.current_controller = buffer.nextU8();
-    result.current_location = buffer.nextU8();
-    result.current_sequence = buffer.nextU8();
-    result.current_position = buffer.nextU8();
+    result.controller = buffer.nextU8();
+    result.location = buffer.nextU8();
+    result.sequence = buffer.nextU8();
+    result.position = buffer.nextU8();
   }
   result.msgtype = 'MSG_SET';
   return result as MsgSet;
@@ -2175,13 +2159,13 @@ function parseMsgChaining(buffer: BufferReader): MsgChaining {
   const result: any = { };
   { /* reading result (MsgChaining) */
     result.code = buffer.nextU32();
-    result.previous_chain_controller = buffer.nextU8();
-    result.previous_chain_location = buffer.nextU8();
-    result.previous_chain_sequence = buffer.nextU8();
+    result.previous_controller = buffer.nextU8();
+    result.previous_location = buffer.nextU8();
+    result.previous_sequence = buffer.nextU8();
     result.subsequence = buffer.nextU8();
-    result.chain_controller = buffer.nextU8();
-    result.chain_location = buffer.nextU8();
-    result.chain_sequence = buffer.nextU8();
+    result.controller = buffer.nextU8();
+    result.location = buffer.nextU8();
+    result.sequence = buffer.nextU8();
     result.desc = buffer.nextI32();
     result.param = buffer.nextI8();
   }
@@ -2599,7 +2583,10 @@ function parseMsgDamageStepEnd(_buffer: BufferReader): MsgDamageStepEnd {
 function parseMsgMissedEffect(buffer: BufferReader): MsgMissedEffect {
   const result: any = { };
   { /* reading result (MsgMissedEffect) */
-    result.ignore = buffer.nextI32();
+    result.controller = buffer.nextU8();
+    result.location = buffer.nextU8();
+    result.sequence = buffer.nextU8();
+    result.subsequence = buffer.nextU8();
     result.code = buffer.nextU32();
   }
   result.msgtype = 'MSG_MISSED_EFFECT';
@@ -2616,10 +2603,7 @@ function parseMsgTossCoin(buffer: BufferReader): MsgTossCoin {
     const tosses: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
-      const tosses1: any = { };
-      { /* reading tosses1 (TossResult) */
-        tosses1.value = buffer.nextU8();
-      }
+      const tosses1 = buffer.nextU8();
       tosses.push(tosses1)
     }
     result.tosses = tosses;
@@ -2638,10 +2622,7 @@ function parseMsgTossDice(buffer: BufferReader): MsgTossDice {
     const tosses: any[] = [];
     // tslint:disable-next-line:one-variable-per-declaration
     for (let i = 0, n = buffer.nextU8(); i !== n; ++i) {
-      const tosses1: any = { };
-      { /* reading tosses1 (TossResult) */
-        tosses1.value = buffer.nextU8();
-      }
+      const tosses1 = buffer.nextU8();
       tosses.push(tosses1)
     }
     result.tosses = tosses;
@@ -2885,7 +2866,7 @@ function parseMsgReloadField(buffer: BufferReader): MsgReloadField {
 /**
  * message type
  */
-export type Message = MsgRetry | MsgHint | MsgWin | MsgWaiting | MsgStart | MsgUpdateData | MsgUpdateCard | MsgSelectBattleCmd | MsgSelectIdleCmd | MsgSelectEffectyn | MsgSelectYesno | MsgSelectOption | MsgSelectCard | MsgSelectUnselectCard | MsgSelectChain | MsgSelectPlace | MsgSelectDisfield | MsgSelectPosition | MsgSelectTribute | MsgSelectCounter | MsgSelectSum | MsgSortCard | MsgSortChain | MsgConfirmDeckTop | MsgConfirmExtratop | MsgConfirmCards | MsgShuffleDeck | MsgRefreshDeck | MsgSwapGraveDeck | MsgShuffleHand | MsgShuffleExtra | MsgDraw | MsgReverseDeck | MsgDeckTop | MsgShuffleSetCard | MsgNewTurn | MsgNewPhase | MsgMove | MsgPosChange | MsgSet | MsgSwap | MsgFieldDisabled | MsgSummoning | MsgSpsummoning | MsgFlipsummoning | MsgSummoned | MsgSpsummoned | MsgFlipsummoned | MsgChaining | MsgChained | MsgChainSolving | MsgChainSolved | MsgChainNegated | MsgChainDisabled | MsgChainEnd | MsgCardSelected | MsgBecomeTarget | MsgRandomSelected | MsgDamage | MsgRecover | MsgLpUpdate | MsgPayLpCost | MsgEquip | MsgCardTarget | MsgCancelTarget | MsgUnequip | MsgAddCounter | MsgRemoveCounter | MsgAttack | MsgBattle | MsgAttackDisabled | MsgDamageStepStart | MsgDamageStepEnd | MsgMissedEffect | MsgTossCoin | MsgTossDice | MsgRockPaperScissors | MsgHandRes | MsgAnnounceRace | MsgAnnounceAttrib | MsgAnnounceCard | MsgAnnounceNumber | MsgAnnounceCardFilter | MsgCardHint | MsgPlayerHint | MsgMatchKill | MsgTagSwap | MsgReloadField;
+export type Message = MsgRetry | MsgHint | MsgWin | MsgWaiting | MsgStart | MsgUpdateData | MsgUpdateCard | MsgSelectBattleCmd | MsgSelectIdleCmd | MsgSelectEffectyn | MsgSelectYesno | MsgSelectOption | MsgSelectCard | MsgSelectUnselectCard | MsgSelectChain | MsgSelectPlace | MsgSelectDisfield | MsgSelectPosition | MsgSelectTribute | MsgSelectCounter | MsgSelectSum | MsgSortCard | MsgSortChain | MsgConfirmDeckTop | MsgConfirmExtratop | MsgConfirmCards | MsgShuffleDeck | MsgRefreshDeck | MsgSwapGraveDeck | MsgNewTurn | MsgShuffleHand | MsgShuffleExtra | MsgDraw | MsgReverseDeck | MsgDeckTop | MsgShuffleSetCard | MsgNewPhase | MsgMove | MsgPosChange | MsgSet | MsgSwap | MsgFieldDisabled | MsgSummoning | MsgSpsummoning | MsgFlipsummoning | MsgSummoned | MsgSpsummoned | MsgFlipsummoned | MsgChaining | MsgChained | MsgChainSolving | MsgChainSolved | MsgChainNegated | MsgChainDisabled | MsgChainEnd | MsgCardSelected | MsgBecomeTarget | MsgRandomSelected | MsgDamage | MsgRecover | MsgLpUpdate | MsgPayLpCost | MsgEquip | MsgCardTarget | MsgCancelTarget | MsgUnequip | MsgAddCounter | MsgRemoveCounter | MsgAttack | MsgBattle | MsgAttackDisabled | MsgDamageStepStart | MsgDamageStepEnd | MsgMissedEffect | MsgTossCoin | MsgTossDice | MsgRockPaperScissors | MsgHandRes | MsgAnnounceRace | MsgAnnounceAttrib | MsgAnnounceCard | MsgAnnounceNumber | MsgAnnounceCardFilter | MsgCardHint | MsgPlayerHint | MsgMatchKill | MsgTagSwap | MsgReloadField;
 
 /**
  * parse one message
@@ -2922,13 +2903,13 @@ function parseOneMessage(buffer: BufferReader): Message {
     case MSG.SHUFFLE_DECK: return parseMsgShuffleDeck(buffer);
     case MSG.REFRESH_DECK: return parseMsgRefreshDeck(buffer);
     case MSG.SWAP_GRAVE_DECK: return parseMsgSwapGraveDeck(buffer);
+    case MSG.NEW_TURN: return parseMsgNewTurn(buffer);
     case MSG.SHUFFLE_HAND: return parseMsgShuffleHand(buffer);
     case MSG.SHUFFLE_EXTRA: return parseMsgShuffleExtra(buffer);
     case MSG.DRAW: return parseMsgDraw(buffer);
     case MSG.REVERSE_DECK: return parseMsgReverseDeck(buffer);
     case MSG.DECK_TOP: return parseMsgDeckTop(buffer);
     case MSG.SHUFFLE_SET_CARD: return parseMsgShuffleSetCard(buffer);
-    case MSG.NEW_TURN: return parseMsgNewTurn(buffer);
     case MSG.NEW_PHASE: return parseMsgNewPhase(buffer);
     case MSG.MOVE: return parseMsgMove(buffer);
     case MSG.POS_CHANGE: return parseMsgPosChange(buffer);
