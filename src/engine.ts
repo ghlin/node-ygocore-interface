@@ -139,7 +139,7 @@ export interface OCGEngine<D> {
    * returns the duel id, pass it to below functions.
    * @param seed random seed
    */
-  createDuel(seed: number): number;
+  createDuel(seed: number): D;
 
   /**
    * start a duel
