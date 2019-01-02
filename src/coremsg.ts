@@ -74,13 +74,13 @@ export interface MsgUpdateData {
   cards: Array<{
     query_flag: number;
     code: Optional<number>;
-    alias: Optional<number>;
     info: Optional<{
       controller: number;
       location: number;
       position: number;
       sequence: number;
     }>;
+    alias: Optional<number>;
     type: Optional<number>;
     level: Optional<number>;
     rank: Optional<number>;
@@ -970,6 +970,98 @@ export interface MsgReloadField {
     }>;
   }>;
 }
+/**
+ * message type
+ */
+export type Message = MsgRetry
+                    | MsgHint
+                    | MsgWin
+                    | MsgWaiting
+                    | MsgStart
+                    | MsgUpdateData
+                    | MsgUpdateCard
+                    | MsgSelectBattleCmd
+                    | MsgSelectIdleCmd
+                    | MsgSelectEffectyn
+                    | MsgSelectYesno
+                    | MsgSelectOption
+                    | MsgSelectCard
+                    | MsgSelectUnselectCard
+                    | MsgSelectChain
+                    | MsgSelectPlace
+                    | MsgSelectDisfield
+                    | MsgSelectPosition
+                    | MsgSelectTribute
+                    | MsgSelectCounter
+                    | MsgSelectSum
+                    | MsgSortCard
+                    | MsgSortChain
+                    | MsgConfirmDeckTop
+                    | MsgConfirmExtratop
+                    | MsgConfirmCards
+                    | MsgShuffleDeck
+                    | MsgRefreshDeck
+                    | MsgSwapGraveDeck
+                    | MsgNewTurn
+                    | MsgShuffleHand
+                    | MsgShuffleExtra
+                    | MsgDraw
+                    | MsgReverseDeck
+                    | MsgDeckTop
+                    | MsgShuffleSetCard
+                    | MsgNewPhase
+                    | MsgMove
+                    | MsgPosChange
+                    | MsgSet
+                    | MsgSwap
+                    | MsgFieldDisabled
+                    | MsgSummoning
+                    | MsgSpsummoning
+                    | MsgFlipsummoning
+                    | MsgSummoned
+                    | MsgSpsummoned
+                    | MsgFlipsummoned
+                    | MsgChaining
+                    | MsgChained
+                    | MsgChainSolving
+                    | MsgChainSolved
+                    | MsgChainNegated
+                    | MsgChainDisabled
+                    | MsgChainEnd
+                    | MsgCardSelected
+                    | MsgBecomeTarget
+                    | MsgRandomSelected
+                    | MsgDamage
+                    | MsgRecover
+                    | MsgLpUpdate
+                    | MsgPayLpCost
+                    | MsgEquip
+                    | MsgCardTarget
+                    | MsgCancelTarget
+                    | MsgUnequip
+                    | MsgAddCounter
+                    | MsgRemoveCounter
+                    | MsgAttack
+                    | MsgBattle
+                    | MsgAttackDisabled
+                    | MsgDamageStepStart
+                    | MsgDamageStepEnd
+                    | MsgMissedEffect
+                    | MsgTossCoin
+                    | MsgTossDice
+                    | MsgRockPaperScissors
+                    | MsgHandRes
+                    | MsgAnnounceRace
+                    | MsgAnnounceAttrib
+                    | MsgAnnounceCard
+                    | MsgAnnounceNumber
+                    | MsgAnnounceCardFilter
+                    | MsgCardHint
+                    | MsgPlayerHint
+                    | MsgMatchKill
+                    | MsgTagSwap
+                    | MsgReloadField
+                    ;
 
 /**
  * parse bytes as MsgRetry (MSG_RETRY)
@@ -1054,13 +1146,13 @@ function parseMsgStart(buffer: BufferReader): MsgStart {
 export interface QueryCardChunk {
   query_flag: number;
   code: Optional<number>;
-  alias: Optional<number>;
   info: Optional<{
     controller: number;
     location: number;
     position: number;
     sequence: number;
   }>;
+  alias: Optional<number>;
   type: Optional<number>;
   level: Optional<number>;
   rank: Optional<number>;
@@ -1132,8 +1224,8 @@ function parseChunks(buffer: BufferReader): any[] {
 
     chunk.query_flag = flags;
     if (flags & QUERY.CODE) chunk.code = buffer.nextU32();
-    if (flags & QUERY.ALIAS) chunk.alias = buffer.nextU32();
     if (flags & QUERY.POSITION) chunk.info = parseInfoLocation(buffer);
+    if (flags & QUERY.ALIAS) chunk.alias = buffer.nextU32();
     if (flags & QUERY.TYPE) chunk.type = buffer.nextU32();
     if (flags & QUERY.LEVEL) chunk.level = buffer.nextU32();
     if (flags & QUERY.RANK) chunk.rank = buffer.nextU32();
@@ -2863,98 +2955,6 @@ function parseMsgReloadField(buffer: BufferReader): MsgReloadField {
   result.msgtype = 'MSG_RELOAD_FIELD';
   return result as MsgReloadField;
 }
-/**
- * message type
- */
-export type Message = MsgRetry
-                    | MsgHint
-                    | MsgWin
-                    | MsgWaiting
-                    | MsgStart
-                    | MsgUpdateData
-                    | MsgUpdateCard
-                    | MsgSelectBattleCmd
-                    | MsgSelectIdleCmd
-                    | MsgSelectEffectyn
-                    | MsgSelectYesno
-                    | MsgSelectOption
-                    | MsgSelectCard
-                    | MsgSelectUnselectCard
-                    | MsgSelectChain
-                    | MsgSelectPlace
-                    | MsgSelectDisfield
-                    | MsgSelectPosition
-                    | MsgSelectTribute
-                    | MsgSelectCounter
-                    | MsgSelectSum
-                    | MsgSortCard
-                    | MsgSortChain
-                    | MsgConfirmDeckTop
-                    | MsgConfirmExtratop
-                    | MsgConfirmCards
-                    | MsgShuffleDeck
-                    | MsgRefreshDeck
-                    | MsgSwapGraveDeck
-                    | MsgNewTurn
-                    | MsgShuffleHand
-                    | MsgShuffleExtra
-                    | MsgDraw
-                    | MsgReverseDeck
-                    | MsgDeckTop
-                    | MsgShuffleSetCard
-                    | MsgNewPhase
-                    | MsgMove
-                    | MsgPosChange
-                    | MsgSet
-                    | MsgSwap
-                    | MsgFieldDisabled
-                    | MsgSummoning
-                    | MsgSpsummoning
-                    | MsgFlipsummoning
-                    | MsgSummoned
-                    | MsgSpsummoned
-                    | MsgFlipsummoned
-                    | MsgChaining
-                    | MsgChained
-                    | MsgChainSolving
-                    | MsgChainSolved
-                    | MsgChainNegated
-                    | MsgChainDisabled
-                    | MsgChainEnd
-                    | MsgCardSelected
-                    | MsgBecomeTarget
-                    | MsgRandomSelected
-                    | MsgDamage
-                    | MsgRecover
-                    | MsgLpUpdate
-                    | MsgPayLpCost
-                    | MsgEquip
-                    | MsgCardTarget
-                    | MsgCancelTarget
-                    | MsgUnequip
-                    | MsgAddCounter
-                    | MsgRemoveCounter
-                    | MsgAttack
-                    | MsgBattle
-                    | MsgAttackDisabled
-                    | MsgDamageStepStart
-                    | MsgDamageStepEnd
-                    | MsgMissedEffect
-                    | MsgTossCoin
-                    | MsgTossDice
-                    | MsgRockPaperScissors
-                    | MsgHandRes
-                    | MsgAnnounceRace
-                    | MsgAnnounceAttrib
-                    | MsgAnnounceCard
-                    | MsgAnnounceNumber
-                    | MsgAnnounceCardFilter
-                    | MsgCardHint
-                    | MsgPlayerHint
-                    | MsgMatchKill
-                    | MsgTagSwap
-                    | MsgReloadField
-                    ;
 
 /**
  * parse one message

@@ -310,7 +310,7 @@ function refreshMany(state: DuelState, player: number, where: RefreshPack[], use
 
 function hideCodeForUpdateData(m: MsgUpdateData): MsgUpdateData {
   const cards = m.cards.map(card => {
-    if (!(card.query_flag & QUERY.CODE) || !card.info) return card;
+    if (!(card.query_flag & QUERY.CODE) || !card.info) return { ...card, code: 0 };
     if (!(card.info.position & POS.FACEUP)) return { ...card, code: 0 };
     return card;
   });
