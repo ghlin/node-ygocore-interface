@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": false,
     "experimentalDecorators": false,
-    "target": "es6",
+    "target": "es5",
     "sourceMap": true,
     "allowJs": false,
     "outDir": "./dist"
