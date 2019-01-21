@@ -229,11 +229,13 @@ function createDuel(engine: OCGEngine<{}>, params: CreateDuelParams) {
   const duel = engine.createDuel(params.seed);
 
   params.players.forEach((player, index) => {
+  params.players.forEach((player, playerId) => {
     const lp = player.lp || DEFAULT_LP;
     const draw = player.draw || DEFAULT_DRAW_COUNT;
     const start = player.start || DEFAULT_START_HAND;
-    prepareCards(index, player.main, LOCATION.DECK);
-    prepareCards(index, player.extra, LOCATION.EXTRA);
+    engine.setPlayerInfo(duel, { lp, draw, start, player: playerId });
+    prepareCards(playerId, player.main, LOCATION.DECK);
+    prepareCards(playerId, player.extra, LOCATION.EXTRA);
   });
 
   engine.startDuel(duel, params.options);
