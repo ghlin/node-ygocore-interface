@@ -145,6 +145,11 @@ export interface CreateDuelParams {
    * duel options, use DEFAULT_DUEL_OPTIONS if you have no idea.
    */
   options: number;
+
+  /**
+   * replay mode?
+   */
+  replay?: boolean;
 }
 
 /**
@@ -212,6 +217,9 @@ class MessageQueue {
 }
 
 interface DuelState {
+  options: {
+    replay: boolean;
+  }
   engine: OCGEngine<any>;
   duel: any;
   queue: MessageQueue;
@@ -225,10 +233,9 @@ interface DuelState {
  * @param engine the engine
  * @param params configurations about this duel
  */
-function createDuel(engine: OCGEngine<{}>, params: CreateDuelParams) {
+function createDuel(engine: OCGEngine<{}>, params: CreateDuelParams): DuelState {
   const duel = engine.createDuel(params.seed);
 
-  params.players.forEach((player, index) => {
   params.players.forEach((player, playerId) => {
     const lp = player.lp || DEFAULT_LP;
     const draw = player.draw || DEFAULT_DRAW_COUNT;
@@ -242,10 +249,11 @@ function createDuel(engine: OCGEngine<{}>, params: CreateDuelParams) {
 
   const pump = () => parseMessage(engine.process(duel).data);
   return {
+    options: { replay: !!params.replay },
     queue: new MessageQueue(pump),
     engine,
     duel
-  } as DuelState;
+  }
 
   function prepareCards(player: number, cards: number[], location: number) {
     for (const code of cards) {
@@ -310,7 +318,8 @@ function refreshMany(state: DuelState, player: number, where: RefreshPack[], use
   return where.map(({ location, queryFlags }) => refreshZone(state, player, location, queryFlags, useCache));
 }
 
-function hideCodeForUpdateData(m: MsgUpdateData): MsgUpdateData {
+function hideCodeForUpdateData(m: MsgUpdateData, replay: boolean): MsgUpdateData {
+  if (replay) { return m; }
   const cards = m.cards.map(card => {
     if (!(card.query_flag & QUERY.CODE) || !card.info) return { ...card, code: 0 };
     if (!(card.info.position & POS.FACEUP)) return { ...card, code: 0 };
@@ -340,16 +349,17 @@ const both = [0, 1]
 
 function dispatch<M>(whom: number, what: M): Packet<M> { return { whom, what }; }
 function another(player: number) { return 1 - player; }
-function all(player: number) {
-  return (u: MsgUpdateData) => [dispatch(player, u), dispatch(another(player), hideCodeForUpdateData(u))];
+function all(player: number, replay: boolean) {
+  return (u: MsgUpdateData) => [dispatch(player, u), dispatch(another(player), hideCodeForUpdateData(u, replay))];
 }
 
 function handleQuestion(state: DuelState, /* NOTE: will modify */ m: Question): Packet<Message>[] {
+  const replay = state.options.replay;
   switch (m.msgtype) {
     case 'MSG_SELECT_BATTLECMD':
     case 'MSG_SELECT_IDLECMD':
       return both
-        .map(player => refreshMany(state, player, [M, S, H]).map(all(player)))
+        .map(player => refreshMany(state, player, [M, S, H]).map(all(player, replay)))
         .reduce(flatten, [])
         .reduce(flatten, []);
     case 'MSG_SELECT_TRIBUTE':
@@ -384,12 +394,13 @@ function handleMessage(state: DuelState, m: Message) {
   return packets;
 
   function _handleMessage(state: DuelState, m: Message, out: Packet<Message>[]) {
+    const replay = state.options.replay;
     function tell(whom: number, what: Message) { out.push(dispatch(whom, what)); }
     function yell(what: Message) { tell(0, what); tell(1, what); }
     function secretlyTellMany(whom: number) {
       return (what: MsgUpdateData) => {
         tell(whom, what);
-        tell(another(whom), hideCodeForUpdateData(what));
+        tell(another(whom), hideCodeForUpdateData(what, replay));
       }
     }
     function secretlyTell(whom: number, what: MsgUpdateCard) {
