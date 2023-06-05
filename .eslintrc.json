@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "prettier"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+  }
+}
+
