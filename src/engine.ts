@@ -21,17 +21,19 @@ export interface CardData {
    *        1. a combination of two 32-bit integers, or
    *        2. a string value
    */
-  setcode: string | {
-    /**
-     * high 32-bits of setcode
-     */
-    high: number;
+  setcode:
+    | string
+    | {
+        /**
+         * high 32-bits of setcode
+         */
+        high: number;
 
-    /**
-     * low 32-bits of setcode
-     */
-    low: number;
-  };
+        /**
+         * low 32-bits of setcode
+         */
+        low: number;
+      };
 }
 
 /**
@@ -189,6 +191,7 @@ export interface OCGEngine<D> {
   /**
    * query cards specified by {@param qo}
    */
+
   queryFieldCard(duel: D, qo: QueryFieldCardOptions): Buffer;
 
   /**

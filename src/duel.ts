@@ -1,4 +1,16 @@
-import { isQuestionMessage, LOCATION, Message, MSG, MsgUpdateCard, MsgUpdateData, MsgWin, parseMessage, POS, QUERY, Question } from './coremsg';
+import {
+  isQuestionMessage,
+  LOCATION,
+  Message,
+  MSG,
+  MsgUpdateCard,
+  MsgUpdateData,
+  MsgWin,
+  parseMessage,
+  POS,
+  QUERY,
+  Question,
+} from './coremsg';
 import { OCGEngine } from './engine';
 
 /**
@@ -8,6 +20,7 @@ type STEP_DISPATCH_PACKET = 'DISPATCH_PACKET';
 /**
  * ocgengine is asking a duelist a question.
  */
+
 type STEP_ASK_QUESTION = 'ASK_QUESTION';
 /**
  * duel finished.
@@ -133,7 +146,7 @@ export interface CreateDuelParams {
     /**
      * how many cards to draw in each turn on DP, defaults to 1
      */
-    draw?: number
+    draw?: number;
   }>;
 
   /**
@@ -169,7 +182,9 @@ export class Duel {
    * @param response player's response
    * @returns false for invalid response, true otherwise
    */
-  feed(response: Buffer) { return feed(this.state, response); }
+  feed(response: Buffer) {
+    return feed(this.state, response);
+  }
 
   /**
    * like engine.process, see:
@@ -182,12 +197,16 @@ export class Duel {
    *
    * @see DuelFinished
    */
-  step() { return step(this.state); }
+  step() {
+    return step(this.state);
+  }
 
   /**
    * finish the duel
    */
-  release() { return this.state.engine.endDuel(this.state.duel); }
+  release() {
+    return this.state.engine.endDuel(this.state.duel);
+  }
 }
 
 /**
@@ -196,7 +215,7 @@ export class Duel {
 class MessageQueue {
   private queue: Message[] = [];
   private index = 0;
-  constructor(private pump: () => Message[]) { }
+  constructor(private pump: () => Message[]) {}
 
   get(): Message {
     this.fill();
@@ -219,7 +238,7 @@ class MessageQueue {
 interface DuelState {
   options: {
     replay: boolean;
-  }
+  };
   engine: OCGEngine<any>;
   duel: any;
   queue: MessageQueue;
@@ -233,7 +252,10 @@ interface DuelState {
  * @param engine the engine
  * @param params configurations about this duel
  */
-function createDuel(engine: OCGEngine<{}>, params: CreateDuelParams): DuelState {
+function createDuel(
+  engine: OCGEngine<{}>,
+  params: CreateDuelParams
+): DuelState {
   const duel = engine.createDuel(params.seed);
 
   params.players.forEach((player, playerId) => {
@@ -252,12 +274,19 @@ function createDuel(engine: OCGEngine<{}>, params: CreateDuelParams): DuelState 
     options: { replay: !!params.replay },
     queue: new MessageQueue(pump),
     engine,
-    duel
-  }
+    duel,
+  };
 
   function prepareCards(player: number, cards: number[], location: number) {
     for (const code of cards) {
-      engine.newCard(duel, { player, owner: player, sequence: 0, code, location, position: POS.FACEDOWN });
+      engine.newCard(duel, {
+        player,
+        owner: player,
+        sequence: 0,
+        code,
+        location,
+        position: POS.FACEDOWN,
+      });
     }
   }
 }
@@ -274,28 +303,52 @@ function feed(state: DuelState, response: Buffer): boolean {
 }
 
 function step(state: DuelState): StepResult {
-  if (state.finished) { return state.finished; }
-  if (state.pendingQuestion) { return { tag: 'ASK_QUESTION', question: state.pendingQuestion } }
+  if (state.finished) {
+    return state.finished;
+  }
+  if (state.pendingQuestion) {
+    return { tag: 'ASK_QUESTION', question: state.pendingQuestion };
+  }
 
   const m = state.queue.get();
 
   if (m.msgtype === 'MSG_WIN') {
-    state.finished = { tag: 'DUEL_FINISHED', why: { tag: 'REASON_WIN', message: m } };
+    state.finished = {
+      tag: 'DUEL_FINISHED',
+      why: { tag: 'REASON_WIN', message: m },
+    };
   }
 
-  if (isQuestionMessage(m)) { state.pendingQuestion = m; }
+  if (isQuestionMessage(m)) {
+    state.pendingQuestion = m;
+  }
 
   const packets = state.pendingQuestion
     ? handleQuestion(state, m as Question)
     : handleMessage(state, m);
 
-  return packets.length ? { tag: 'DISPATCH_PACKET', packets: packets, original: m } : step(state);
+  return packets.length
+    ? { tag: 'DISPATCH_PACKET', packets: packets, original: m }
+    : step(state);
 }
 
-function refreshZone(state: DuelState, player: number, location: number, queryFlags: number, useCache: boolean) {
-  const qbuff = state.engine.queryFieldCard(state.duel, { player, location, queryFlags, useCache });
+function refreshZone(
+  state: DuelState,
+  player: number,
+  location: number,
+  queryFlags: number,
+  useCache: boolean
+) {
+  const qbuff = state.engine.queryFieldCard(state.duel, {
+    player,
+    location,
+    queryFlags,
+    useCache,
+  });
   const header = [MSG.UPDATE_DATA, player, location];
-  return parseMessage(Buffer.concat([Buffer.from(header), qbuff]))[0] as MsgUpdateData;
+  return parseMessage(
+    Buffer.concat([Buffer.from(header), qbuff])
+  )[0] as MsgUpdateData;
 }
 
 interface RefreshPack {
@@ -304,24 +357,46 @@ interface RefreshPack {
 }
 
 const REFRESH_FLAGS_DEFAULT = {
-  HAND: 0x781FFF,
-  MZONE: 0x881FFF,
-  SZONE: 0x681FFF,
-  SINGLE: 0xF81FFF
+  HAND: 0x781fff,
+  MZONE: 0x881fff,
+  SZONE: 0x681fff,
+  SINGLE: 0xf81fff,
+};
+
+const M: RefreshPack = {
+  location: LOCATION.MZONE,
+  queryFlags: REFRESH_FLAGS_DEFAULT.MZONE,
+};
+const S: RefreshPack = {
+  location: LOCATION.SZONE,
+  queryFlags: REFRESH_FLAGS_DEFAULT.SZONE,
+};
+const H: RefreshPack = {
+  location: LOCATION.HAND,
+  queryFlags: REFRESH_FLAGS_DEFAULT.HAND,
+};
+
+function refreshMany(
+  state: DuelState,
+  player: number,
+  where: RefreshPack[],
+  useCache: boolean = true
+) {
+  return where.map(({ location, queryFlags }) =>
+    refreshZone(state, player, location, queryFlags, useCache)
+  );
 }
 
-const M: RefreshPack = { location: LOCATION.MZONE, queryFlags: REFRESH_FLAGS_DEFAULT.MZONE };
-const S: RefreshPack = { location: LOCATION.SZONE, queryFlags: REFRESH_FLAGS_DEFAULT.SZONE };
-const H: RefreshPack = { location: LOCATION.HAND, queryFlags: REFRESH_FLAGS_DEFAULT.HAND };
-
-function refreshMany(state: DuelState, player: number, where: RefreshPack[], useCache: boolean = true) {
-  return where.map(({ location, queryFlags }) => refreshZone(state, player, location, queryFlags, useCache));
-}
-
-function hideCodeForUpdateData(m: MsgUpdateData, replay: boolean): MsgUpdateData {
-  if (replay) { return m; }
-  const cards = m.cards.map(card => {
-    if (!(card.query_flag & QUERY.CODE) || !card.info) return { ...card, code: 0 };
+function hideCodeForUpdateData(
+  m: MsgUpdateData,
+  replay: boolean
+): MsgUpdateData {
+  if (replay) {
+    return m;
+  }
+  const cards = m.cards.map((card) => {
+    if (!(card.query_flag & QUERY.CODE) || !card.info)
+      return { ...card, code: 0 };
     if (!(card.info.position & POS.FACEUP)) return { ...card, code: 0 };
     return card;
   });
@@ -329,37 +404,66 @@ function hideCodeForUpdateData(m: MsgUpdateData, replay: boolean): MsgUpdateData
   return { ...m, cards };
 }
 
-function refreshCard(state: DuelState, player: number, location: number, sequence: number, flags: number, useCache: boolean) {
-  const result = state.engine.queryCard(state.duel, { player, location, queryFlags: flags, useCache, sequence });
+function refreshCard(
+  state: DuelState,
+  player: number,
+  location: number,
+  sequence: number,
+  flags: number,
+  useCache: boolean
+) {
+  const result = state.engine.queryCard(state.duel, {
+    player,
+    location,
+    queryFlags: flags,
+    useCache,
+    sequence,
+  });
   const header = [MSG.UPDATE_CARD, player, location, sequence];
-  return parseMessage(Buffer.concat([Buffer.from(header), result]))[0] as MsgUpdateCard;
+  return parseMessage(
+    Buffer.concat([Buffer.from(header), result])
+  )[0] as MsgUpdateCard;
 }
 
 function shouldResendRefreshSingle(m: MsgUpdateCard) {
   if (!('location' in m) || !('info' in m)) return false;
-  if (m.location === LOCATION.REMOVED && (m.info!.position & POS.FACEDOWN)) return false;
+  if (m.location === LOCATION.REMOVED && m.info!.position & POS.FACEDOWN)
+    return false;
 
   if (m.location & LOCATION.OVERLAY) return true;
 
-  const positionAwareLoc = LOCATION.MZONE + LOCATION.SZONE + LOCATION.ONFIELD + LOCATION.REMOVED;
-  return (m.location & positionAwareLoc) && (m.info!.position & POS.FACEUP);
+  const positionAwareLoc =
+    LOCATION.MZONE + LOCATION.SZONE + LOCATION.ONFIELD + LOCATION.REMOVED;
+  return m.location & positionAwareLoc && m.info!.position & POS.FACEUP;
 }
 
-const both = [0, 1]
+const both = [0, 1];
 
-function dispatch<M>(whom: number, what: M): Packet<M> { return { whom, what }; }
-function another(player: number) { return 1 - player; }
+function dispatch<M>(whom: number, what: M): Packet<M> {
+  return { whom, what };
+}
+function another(player: number) {
+  return 1 - player;
+}
 function all(player: number, replay: boolean) {
-  return (u: MsgUpdateData) => [dispatch(player, u), dispatch(another(player), hideCodeForUpdateData(u, replay))];
+  return (u: MsgUpdateData) => [
+    dispatch(player, u),
+    dispatch(another(player), hideCodeForUpdateData(u, replay)),
+  ];
 }
 
-function handleQuestion(state: DuelState, /* NOTE: will modify */ m: Question): Packet<Message>[] {
+function handleQuestion(
+  state: DuelState,
+  /* NOTE: will modify */ m: Question
+): Packet<Message>[] {
   const replay = state.options.replay;
   switch (m.msgtype) {
     case 'MSG_SELECT_BATTLECMD':
     case 'MSG_SELECT_IDLECMD':
       return both
-        .map(player => refreshMany(state, player, [M, S, H]).map(all(player, replay)))
+        .map((player) =>
+          refreshMany(state, player, [M, S, H]).map(all(player, replay))
+        )
         .reduce(flatten, [])
         .reduce(flatten, []);
     case 'MSG_SELECT_TRIBUTE':
@@ -383,7 +487,7 @@ function handleQuestion(state: DuelState, /* NOTE: will modify */ m: Question): 
       }
       break;
     default:
-      /* nothing to do */
+    /* nothing to do */
   }
   return [];
 }
@@ -393,15 +497,24 @@ function handleMessage(state: DuelState, m: Message) {
   _handleMessage(state, m, packets);
   return packets;
 
-  function _handleMessage(state: DuelState, m: Message, out: Packet<Message>[]) {
+  function _handleMessage(
+    state: DuelState,
+    m: Message,
+    out: Packet<Message>[]
+  ) {
     const replay = state.options.replay;
-    function tell(whom: number, what: Message) { out.push(dispatch(whom, what)); }
-    function yell(what: Message) { tell(0, what); tell(1, what); }
+    function tell(whom: number, what: Message) {
+      out.push(dispatch(whom, what));
+    }
+    function yell(what: Message) {
+      tell(0, what);
+      tell(1, what);
+    }
     function secretlyTellMany(whom: number) {
       return (what: MsgUpdateData) => {
         tell(whom, what);
         tell(another(whom), hideCodeForUpdateData(what, replay));
-      }
+      };
     }
     function secretlyTell(whom: number, what: MsgUpdateCard) {
       tell(whom, what);
@@ -411,9 +524,19 @@ function handleMessage(state: DuelState, m: Message) {
     switch (m.msgtype) {
       case 'MSG_HINT':
         switch (m.type) {
-          case 1: case 2: case 3: case 5: return tell(m.player, m);
-          case 4: case 6: case 7: case 8: case 9: return tell(another(m.player), m);
-          default: return yell(m);
+          case 1:
+          case 2:
+          case 3:
+          case 5:
+            return tell(m.player, m);
+          case 4:
+          case 6:
+          case 7:
+          case 8:
+          case 9:
+            return tell(another(m.player), m);
+          default:
+            return yell(m);
         }
 
       case 'MSG_CONFIRM_CARDS':
@@ -431,14 +554,21 @@ function handleMessage(state: DuelState, m: Message) {
       case 'MSG_SHUFFLE_SET_CARD':
         for (const player of both) {
           tell(player, m);
-          refreshMany(state, player, [{ location: m.location, queryFlags: 0x181FFF }], false).forEach(secretlyTellMany(player))
+          refreshMany(
+            state,
+            player,
+            [{ location: m.location, queryFlags: 0x181fff }],
+            false
+          ).forEach(secretlyTellMany(player));
         }
         return;
 
       case 'MSG_NEW_PHASE':
       case 'MSG_NEW_TURN':
         for (const player of both) {
-          refreshMany(state, player, [M, S, H]).forEach(secretlyTellMany(player));
+          refreshMany(state, player, [M, S, H]).forEach(
+            secretlyTellMany(player)
+          );
           tell(player, m);
         }
         return;
@@ -446,8 +576,14 @@ function handleMessage(state: DuelState, m: Message) {
       case 'MSG_MOVE':
         tell(m.current.controller, m);
 
-        const graveOrOverlay = !!(m.current.location & (LOCATION.GRAVE + LOCATION.OVERLAY));
-        const deckOrHand = !!(m.current.location & (LOCATION.DECK + LOCATION.HAND));
+        const graveOrOverlay = !!(
+          m.current.location &
+          (LOCATION.GRAVE + LOCATION.OVERLAY)
+        );
+        const deckOrHand = !!(
+          m.current.location &
+          (LOCATION.DECK + LOCATION.HAND)
+        );
         const faceDown = !!(m.current.position & POS.FACEDOWN);
 
         if (!graveOrOverlay && (deckOrHand || faceDown)) {
@@ -456,18 +592,38 @@ function handleMessage(state: DuelState, m: Message) {
           tell(another(m.current.controller), m);
         }
 
-        if (m.current.location
-          && !(m.current.location & LOCATION.OVERLAY)
-          && (m.current.location !== m.previous.location || m.current.controller !== m.previous.controller)) {
-          const q = refreshCard(state, m.current.controller, m.current.location, m.current.sequence, REFRESH_FLAGS_DEFAULT.SINGLE, false);
+        if (
+          m.current.location &&
+          !(m.current.location & LOCATION.OVERLAY) &&
+          (m.current.location !== m.previous.location ||
+            m.current.controller !== m.previous.controller)
+        ) {
+          const q = refreshCard(
+            state,
+            m.current.controller,
+            m.current.location,
+            m.current.sequence,
+            REFRESH_FLAGS_DEFAULT.SINGLE,
+            false
+          );
           secretlyTell(m.current.controller, q);
         }
         return;
 
       case 'MSG_POS_CHANGE':
         yell(m);
-        if ((m.previous_position & POS.FACEDOWN) && (m.current_position & POS.FACEUP)) {
-          const q = refreshCard(state, m.current_controller, m.current_location, m.current_sequence, REFRESH_FLAGS_DEFAULT.SINGLE, false);
+        if (
+          m.previous_position & POS.FACEDOWN &&
+          m.current_position & POS.FACEUP
+        ) {
+          const q = refreshCard(
+            state,
+            m.current_controller,
+            m.current_location,
+            m.current_sequence,
+            REFRESH_FLAGS_DEFAULT.SINGLE,
+            false
+          );
           secretlyTell(m.current_controller, q);
         }
         return;
@@ -478,7 +634,14 @@ function handleMessage(state: DuelState, m: Message) {
       case 'MSG_SWAP':
         yell(m);
         for (const info of [m.first, m.second]) {
-          const q = refreshCard(state, info.controller, info.location, info.sequence, REFRESH_FLAGS_DEFAULT.SINGLE, false);
+          const q = refreshCard(
+            state,
+            info.controller,
+            info.location,
+            info.sequence,
+            REFRESH_FLAGS_DEFAULT.SINGLE,
+            false
+          );
           secretlyTell(info.controller, q);
         }
         return;
@@ -491,18 +654,29 @@ function handleMessage(state: DuelState, m: Message) {
       case 'MSG_CHAIN_END':
         for (const player of both) {
           tell(player, m);
-          const alsoRefreshHand = m.msgtype === 'MSG_CHAINED' || m.msgtype === 'MSG_CHAIN_SOLVED' || m.msgtype === 'MSG_CHAIN_END';
-          refreshMany(state, player, alsoRefreshHand ? [M, S, H] : [M, S]).forEach(secretlyTellMany(player));
+          const alsoRefreshHand =
+            m.msgtype === 'MSG_CHAINED' ||
+            m.msgtype === 'MSG_CHAIN_SOLVED' ||
+            m.msgtype === 'MSG_CHAIN_END';
+          refreshMany(
+            state,
+            player,
+            alsoRefreshHand ? [M, S, H] : [M, S]
+          ).forEach(secretlyTellMany(player));
         }
         return;
 
-      case 'MSG_CARD_SELECTED': return;
+      case 'MSG_CARD_SELECTED':
+        return;
 
       case 'MSG_DRAW':
         tell(m.player, m);
-        return tell(another(m.player), { ...m, cards: m.cards.map(code => {
-          return (code & 0x80000000) ? code : 0;
-        }) });
+        return tell(another(m.player), {
+          ...m,
+          cards: m.cards.map((code) => {
+            return code & 0x80000000 ? code : 0;
+          }),
+        });
 
       case 'MSG_DAMAGE_STEP_START':
       case 'MSG_DAMAGE_STEP_END':
@@ -515,9 +689,12 @@ function handleMessage(state: DuelState, m: Message) {
       case 'MSG_MISSED_EFFECT':
         return tell(m.controller, m);
 
-      default: return yell(m);
+      default:
+        return yell(m);
     }
   }
 }
 
-function flatten<T>(previous: T[], current: T[]) { return previous.concat(current); }
+function flatten<T>(previous: T[], current: T[]) {
+  return previous.concat(current);
+}
